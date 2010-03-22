@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-g
+CXXFLAGS=-g -Wall
 
 all: main
 
