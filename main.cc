@@ -63,22 +63,24 @@ struct Array {
 typedef std::string Id;
 
 struct Node {
-	Node(const Id &id, int data) : header(this), left(this), right(this), top(this), down(this), id(id), data(data) {}
+	Node(const Id &id, int data) : headertop(this), headerright(this), left(this), right(this), top(this), down(this), id(id), data(data) {}
 
     void print(std::ostream &os) {
         os << id << " " << data;
-        os << " header=" << (header==this ? "self" : header->id);
+        os << " headerright=" << (headerright==this ? "self" : headerright->id);
         os << " left=" << (left==this ? "self" : left->id);
         os << " right=" << (right==this ? "self" : right->id);
+        os << " headertop=" << (headertop==this ? "self" : headertop->id);
         os << " top=" << (top==this ? "self" : top->id);
         os << " down=" << (down==this ? "self" : down->id);
     }
-	Node *header;
+	Node *headertop,*headerright;
 	Node *left,*right;
 	Node *top,*down;
 	const Id id;
     const int data;
 };
+
 
 typedef std::list<Node*> Nodes;
 
@@ -88,6 +90,16 @@ void insert_right(Node *list, Node *node) {
     list->right->left = list;
     list_right->left = node;
     list_right->left->right = list_right;
+    node->headerright = list->headerright;
+}
+
+void insert_left(Node *list, Node *node) {
+    Node *list_left = list->left;
+    list->left = node;
+    list->left->right = list;
+    list_left->right = node;
+    list_left->right->left = list_left;
+    node->headerright = list->headerright;
 }
 
 void insert_down(Node *list, Node *node) {
@@ -96,45 +108,63 @@ void insert_down(Node *list, Node *node) {
     list->down->top = list;
     list_down->top = node;
     list_down->top->down = list_down;
-    node->header = list->header;
+    node->headertop = list->headertop;
+}
+
+void insert_top(Node *list, Node *node) {
+    Node *list_top = list->top;
+    list->top = node;
+    list->top->down = list;
+    list_top->down = node;
+    list_top->down->top = list_top;
+    node->headertop = list->headertop;
 }
 
 Node *build_structure(const Array &array, Nodes &collector) {
     Node *root = new Node("root",-1);
     collector.push_back(root);
 
+    {
     Node *column_prec = root;
     for (int j=0; j<array.width; j++) {
-        Id column_id("a ");
+        Id column_id("ac");
         column_id[0]+=j;
 
         Node *column = new Node(column_id,j);
         insert_right(column_prec,column);
         collector.push_back(column);
 
-        Node *row_prec = column;
-        for (int i=0; i<array.height; i++) if (array.get_value(i,j)) {
-            Id row_id("a0");
-            row_id[0]+=j;
-            row_id[1]+=i;
-
-            Node *row = new Node(row_id,i);
-            insert_down(row_prec,row);
-            collector.push_back(row);
-
-            for (Node *left_column=column->left; left_column!=root; left_column=left_column->left) {
-                bool found = false;
-                for (Node *left_row=left_column->down; left_row!=left_column and not found; left_row=left_row->down) if (left_row->data == i) {
-                        insert_right(left_row,row);
-                        found = true;
-                }
-                if (found) break;
-            }
-
-            row_prec = row;
-        }
-
         column_prec = column;
+    }
+    }
+
+    {
+    Node *row_prec = root;
+    for (int i=0; i<array.height; i++) {
+        Id row_id("0r");
+        row_id[0]+=i;
+        
+        Node *row = new Node(row_id,i);
+        insert_down(row_prec,row);
+        collector.push_back(row);
+
+        row_prec = row;
+    }
+    }
+
+    for (Node *column=root->right; column!=root; column=column->right) {
+        for (Node *row=root->down; row!=root; row=row->down) {
+            if (array.get_value(row->data,column->data)) {
+                Id row_id("a0");
+                row_id[0]+=column->data;
+                row_id[1]+=row->data;
+
+                Node *element = new Node(row_id,-1);
+                insert_top(column,element);
+                insert_left(row,element);
+                collector.push_back(element);
+            }
+        }
     }
 
     return root;
@@ -159,6 +189,15 @@ Node *find_minimum_column(Node *root) {
 
     return column_min;
 }
+
+void print_root(const Node *root, std::ostream &os) {
+    os << " ";
+    for (Node *column=root->right; column!=root; column=column->right) { os << column->id[0]; }
+    os << endl;
+
+
+}
+
 
 typedef std::list<int> Solution;
             
@@ -200,6 +239,7 @@ int main(int argc, char *argv[]) {
     Nodes collector;
     Node *root = build_structure(array,collector);
 
+    print_root(root,cout);
     for (Nodes::const_iterator i=collector.begin(); i!=collector.end(); i++) { 
         (*i)->print(cout);
         cout << endl;
