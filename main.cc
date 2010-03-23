@@ -65,6 +65,42 @@ typedef std::string Id;
 struct Node {
 	Node(const Id &id, int data) : headertop(this), headerright(this), left(this), right(this), top(this), down(this), id(id), data(data) {}
 
+    void insert_right(Node *node) {
+        Node *list_right = this->right;
+        this->right = node;
+        this->right->left = this;
+        list_right->left = node;
+        list_right->left->right = list_right;
+        node->headerright = this->headerright;
+    }
+
+    void insert_left(Node *node) {
+        Node *list_left = this->left;
+        this->left = node;
+        this->left->right = this;
+        list_left->right = node;
+        list_left->right->left = list_left;
+        node->headerright = this->headerright;
+    }
+
+    void insert_down(Node *node) {
+        Node *list_down = this->down;
+        this->down = node;
+        this->down->top = this;
+        list_down->top = node;
+        list_down->top->down = list_down;
+        node->headertop = this->headertop;
+    }
+
+    void insert_top(Node *node) {
+        Node *list_top = this->top;
+        this->top = node;
+        this->top->down = this;
+        list_top->down = node;
+        list_top->down->top = list_top;
+        node->headertop = this->headertop;
+    }
+
     void print(std::ostream &os) {
         os << id << " " << data;
         os << " headerright=" << (headerright==this ? "self" : headerright->id);
@@ -84,42 +120,6 @@ struct Node {
 
 typedef std::list<Node*> Nodes;
 
-void insert_right(Node *list, Node *node) {
-    Node *list_right = list->right;
-    list->right = node;
-    list->right->left = list;
-    list_right->left = node;
-    list_right->left->right = list_right;
-    node->headerright = list->headerright;
-}
-
-void insert_left(Node *list, Node *node) {
-    Node *list_left = list->left;
-    list->left = node;
-    list->left->right = list;
-    list_left->right = node;
-    list_left->right->left = list_left;
-    node->headerright = list->headerright;
-}
-
-void insert_down(Node *list, Node *node) {
-    Node *list_down = list->down;
-    list->down = node;
-    list->down->top = list;
-    list_down->top = node;
-    list_down->top->down = list_down;
-    node->headertop = list->headertop;
-}
-
-void insert_top(Node *list, Node *node) {
-    Node *list_top = list->top;
-    list->top = node;
-    list->top->down = list;
-    list_top->down = node;
-    list_top->down->top = list_top;
-    node->headertop = list->headertop;
-}
-
 Node *build_structure(const Array &array, Nodes &collector) {
     Node *root = new Node("root",-1);
     collector.push_back(root);
@@ -131,7 +131,7 @@ Node *build_structure(const Array &array, Nodes &collector) {
         column_id[0]+=j;
 
         Node *column = new Node(column_id,j);
-        insert_right(column_prec,column);
+        column_prec->insert_right(column);
         collector.push_back(column);
 
         column_prec = column;
@@ -145,7 +145,7 @@ Node *build_structure(const Array &array, Nodes &collector) {
         row_id[0]+=i;
         
         Node *row = new Node(row_id,i);
-        insert_down(row_prec,row);
+        row_prec->insert_down(row);
         collector.push_back(row);
 
         row_prec = row;
@@ -160,8 +160,8 @@ Node *build_structure(const Array &array, Nodes &collector) {
                 row_id[1]+=row->data;
 
                 Node *element = new Node(row_id,-1);
-                insert_top(column,element);
-                insert_left(row,element);
+                column->insert_top(element);
+                row->insert_left(element);
                 collector.push_back(element);
             }
         }
