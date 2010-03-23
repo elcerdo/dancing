@@ -37,12 +37,11 @@ struct Array {
 		return true;
 	}
 
-	void print(std::ostream &os) {
-		for (int i=0; i<height; i++) {
-			for (int j=0; j<width; j++) { os << get_value(i,j); }
-			os << endl;
-		}
-	}
+    int get_number_of_ones() const {
+        int count = 0;
+        for (int k=0; k<size; k++) if (data[k]) count++;
+        return count;
+    }
 
 	bool get_value(int i, int j) const {
 		assert(i >= 0 and i < height);
@@ -57,13 +56,30 @@ struct Array {
 	}
 
 	const int width, height, size;
+protected:
 	bool *data;
 };
+
+
+std::ostream &operator<<(std::ostream &os,const Array &array) {
+    os << " ";
+    for (int j=0; j<array.width; j++) { os << static_cast<char>('a'+j); }
+    os << endl;
+
+    for (int i=0; i<array.height; i++) {
+        os << static_cast<char>('0'+i);
+        for (int j=0; j<array.width; j++) { os << array.get_value(i,j); }
+        os << endl;
+    }
+
+    return os;
+}
+
 
 typedef std::string Id;
 
 struct Node {
-	Node(const Id &id, int data) : headertop(this), headerright(this), left(this), right(this), top(this), down(this), id(id), data(data) {}
+	Node(const Id &id, int data) : headertop(this), headerleft(this), left(this), right(this), top(this), down(this), id(id), data(data) {}
 
     void insert_right(Node *node) {
         Node *list_right = this->right;
@@ -71,7 +87,7 @@ struct Node {
         this->right->left = this;
         list_right->left = node;
         list_right->left->right = list_right;
-        node->headerright = this->headerright;
+        node->headerleft = this->headerleft;
     }
 
     void insert_left(Node *node) {
@@ -80,7 +96,7 @@ struct Node {
         this->left->right = this;
         list_left->right = node;
         list_left->right->left = list_left;
-        node->headerright = this->headerright;
+        node->headerleft = this->headerleft;
     }
 
     void insert_down(Node *node) {
@@ -101,21 +117,45 @@ struct Node {
         node->headertop = this->headertop;
     }
 
-    void print(std::ostream &os) {
-        os << id << " " << data;
-        os << " headerright=" << (headerright==this ? "self" : headerright->id);
-        os << " left=" << (left==this ? "self" : left->id);
-        os << " right=" << (right==this ? "self" : right->id);
-        os << " headertop=" << (headertop==this ? "self" : headertop->id);
-        os << " top=" << (top==this ? "self" : top->id);
-        os << " down=" << (down==this ? "self" : down->id);
+    void fold_column() {
+        assert(this->headertop->data != -1); //this is not the row column
+        Node *element = this->headertop;
+        do {
+            assert(element->left->right == element); //not already folded
+            element->left->right = element->right;
+            element->right = NULL;
+            element = element->top;
+        } while (element != this->headertop);
     }
-	Node *headertop,*headerright;
+
+    void unfold_column() {
+        assert(this->headertop->data != -1); //this is not the row column
+        Node *element = this->headertop;
+        do {
+            assert(element->right == NULL); //already folded
+            element->right = element->left->right;
+            element->left->right = element;
+            element = element->top;
+        } while (element != this->headertop);
+    }
+
+	Node *headertop,*headerleft;
 	Node *left,*right;
 	Node *top,*down;
 	const Id id;
     const int data;
 };
+
+std::ostream &operator<<(std::ostream &os,const Node &node) {
+    os << node.id << " " << node.data;
+    os << " headerleft=" << (node.headerleft==&node ? "self" : node.headerleft->id);
+    os << " left=" << (node.left==&node ? "self" : node.left->id);
+    os << " right=" << (node.right==&node ? "self" : node.right->id);
+    os << " headertop=" << (node.headertop==&node ? "self" : node.headertop->id);
+    os << " top=" << (node.top==&node ? "self" : node.top->id);
+    os << " down=" << (node.down==&node ? "self" : node.down->id);
+    return os;
+}
 
 
 typedef std::list<Node*> Nodes;
@@ -178,8 +218,7 @@ Node *find_minimum_column(Node *root) {
         int length = 0;
         for (Node *element=column->down; element!=column; element=element->down) { length++; }
 
-        column->print(cout);
-        cout << " -> " << length << endl;
+        cout << *column << " -> " << length << endl;
 
         if (length > 0 && (column_min == NULL || length < length_min)) {
             length_min = length;
@@ -191,7 +230,7 @@ Node *find_minimum_column(Node *root) {
 }
 
 void print_root(const Node *root, std::ostream &os) {
-    os << " ";
+    os << endl << " ";
     for (Node *column=root->right; column!=root; column=column->right) { os << column->id[0]; }
     os << endl;
 
@@ -226,17 +265,13 @@ bool solve(Node *root, Solution &partial_solution) {
         return false;
     }
 
-    cout << "min column is ";
-    min_column->print(cout);
-    cout << endl;
+    cout << "min column is " << *min_column << endl;
 
     return true;
 
     Node *row = min_column->down;
     while (row) {
-        cout << "trying row ";
-        row->print(cout);
-        cout << endl;
+        cout << "trying row " << *row << endl;
 
         row = row->down;
     }
@@ -247,22 +282,39 @@ bool solve(Node *root, Solution &partial_solution) {
 int main(int argc, char *argv[]) {
 	Array array(7,6);
 	if (not array.parse(cin)) { cerr << "error while parsing array\n"; return 1; }
-	array.print(cout);
+    cout << array << endl;
 
     Nodes collector;
     Node *root = build_structure(array,collector);
+    cout << "collector has " << collector.size() << " nodes ";
+    cout << "expected " << array.width << "+" << array.height << "+1+" << array.get_number_of_ones() <<"=" << (array.width+array.height+1+array.get_number_of_ones()) << endl;
+    //for (Nodes::const_iterator i=collector.begin(); i!=collector.end(); i++) { 
+    //    cout << **i << endl;
+    //}
 
+    {
     print_root(root,cout);
-    for (Nodes::const_iterator i=collector.begin(); i!=collector.end(); i++) { 
-        (*i)->print(cout);
-        cout << endl;
+    Node *target0 = root->right->right->down->down;
+    Node *target1 = root->right->right->right->right->right;
+    cout << *target0 << endl;
+    cout << *target1 << endl;
+
+    target0->fold_column();
+    print_root(root,cout);
+    target1->fold_column();
+    print_root(root,cout);
+    target0->unfold_column();
+    print_root(root,cout);
+    target1->unfold_column();
+    print_root(root,cout);
     }
 
     Solution solution;
+    cout << endl << "SOLVING" << endl;
     bool found = solve(root,solution);
     cout << "found=" << found << endl;
     for (Solution::const_iterator i=solution.begin(); i!=solution.end(); i++) {
-        cout << (*i) << " ";
+        cout << *i << " ";
     }
     cout << endl;
 
