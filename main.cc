@@ -118,23 +118,37 @@ struct Node {
     }
 
     void fold_column() {
-        assert(this->headertop->data != -1); //this is not the row column
+        assert(this->headertop->data != -1); //this is not the rows column
         Node *element = this->headertop;
         do {
-            assert(element->left->right == element); //not already folded
-            element->left->right = element->right;
+            assert(element->right != NULL); //already folded;
+
+            //find first left unfolded element
+            Node *targeting = element->left;
+            while (targeting->right == NULL) { targeting = targeting->left; }
+            assert(targeting!=element);
+
+            targeting->right = element->right;
             element->right = NULL;
+
             element = element->top;
         } while (element != this->headertop);
     }
 
     void unfold_column() {
-        assert(this->headertop->data != -1); //this is not the row column
+        assert(this->headertop->data != -1); //this is not the rows column
         Node *element = this->headertop;
         do {
-            assert(element->right == NULL); //already folded
-            element->right = element->left->right;
-            element->left->right = element;
+            assert(element->right == NULL); //not folded
+
+            //find first left unfolded element
+            Node *targeting = element->left;
+            while (targeting->right == NULL) { targeting = targeting->left; }
+            assert(targeting!=element);
+
+            element->right = targeting->right;
+            targeting->right = element;
+
             element = element->top;
         } while (element != this->headertop);
     }
@@ -164,7 +178,7 @@ Node *build_structure(const Array &array, Nodes &collector) {
     Node *root = new Node("root",-1);
     collector.push_back(root);
 
-    {
+    { //create columns row
     Node *column_prec = root;
     for (int j=0; j<array.width; j++) {
         Id column_id("ac");
@@ -178,7 +192,7 @@ Node *build_structure(const Array &array, Nodes &collector) {
     }
     }
 
-    {
+    { //create rows column
     Node *row_prec = root;
     for (int i=0; i<array.height; i++) {
         Id row_id("0r");
@@ -192,6 +206,7 @@ Node *build_structure(const Array &array, Nodes &collector) {
     }
     }
 
+    //insert ones in the structure
     for (Node *column=root->right; column!=root; column=column->right) {
         for (Node *row=root->down; row!=root; row=row->down) {
             if (array.get_value(row->data,column->data)) {
@@ -293,19 +308,19 @@ int main(int argc, char *argv[]) {
     //}
 
     {
-    print_root(root,cout);
     Node *target0 = root->right->right->down->down;
-    Node *target1 = root->right->right->right->right->right;
+    Node *target1 = root->right->right->right;
     cout << *target0 << endl;
     cout << *target1 << endl;
 
+    print_root(root,cout);
     target0->fold_column();
     print_root(root,cout);
     target1->fold_column();
     print_root(root,cout);
-    target0->unfold_column();
-    print_root(root,cout);
     target1->unfold_column();
+    print_root(root,cout);
+    target0->unfold_column();
     print_root(root,cout);
     }
 
