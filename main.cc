@@ -176,7 +176,7 @@ Node *find_minimum_column(Node *root) {
 
     for (Node *column=root->right; column!=root; column=column->right) {
         int length = 0;
-        for (Node *row=column->down; row!=column; row=row->down) { length++; }
+        for (Node *element=column->down; element!=column; element=element->down) { length++; }
 
         column->print(cout);
         cout << " -> " << length << endl;
@@ -195,7 +195,20 @@ void print_root(const Node *root, std::ostream &os) {
     for (Node *column=root->right; column!=root; column=column->right) { os << column->id[0]; }
     os << endl;
 
-
+    for (Node *row=root->down; row!=root; row=row->down) {
+        os << row->id[0];
+        Node *element = row->right;
+        for (Node *column=root->right; column!=root; column=column->right) {
+            if (column==element->headertop) {
+                os << "1";
+                element = element->right;
+            } else {
+                os << "0";
+            }
+        }
+        assert(element==row);
+        os << endl;
+    }
 }
 
 
