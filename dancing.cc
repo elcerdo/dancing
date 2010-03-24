@@ -159,7 +159,7 @@ void solve(SolveParams &params, std::ostream &log) {
     if (root->right == root and root->down == root) {
         params.print_indent(log);
         log << "found solution ";
-        for (Solution::const_iterator i=params.partial_solution.begin(); i!=params.partial_solution.end(); i++) { log << (*i)->id << " "; }
+        for (SolveParams::Solution::const_iterator i=params.partial_solution.begin(); i!=params.partial_solution.end(); i++) { log << (*i)->id << " "; }
         log << endl;
         params.solutions.push_back(params.partial_solution);
         return;
@@ -178,8 +178,8 @@ void solve(SolveParams &params, std::ostream &log) {
         params.print_indent(log);
         log << "selected row " << selected->headerleft->id[0] << endl;
 
-        Nodes folded_columns;
-        Nodes folded_rows;
+        SolveParams::Nodes folded_columns;
+        SolveParams::Nodes folded_rows;
         for (Node *element_row=selected->headerleft->right; element_row!=selected->headerleft; element_row=element_row->right) {
             Node *column = element_row->headertop;
             folded_columns.push_back(column);
@@ -193,11 +193,11 @@ void solve(SolveParams &params, std::ostream &log) {
 
         params.partial_solution.push_back(selected->headerleft);
         params.indent++;
-        for (Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->fold_column(); }
-        for (Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->fold_row(); }
+        for (SolveParams::Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->fold_column(); }
+        for (SolveParams::Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->fold_row(); }
         solve(params,log);
-        for (Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->unfold_column(); }
-        for (Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->unfold_row(); }
+        for (SolveParams::Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->unfold_column(); }
+        for (SolveParams::Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->unfold_row(); }
         params.partial_solution.pop_back();
         params.indent--;
 

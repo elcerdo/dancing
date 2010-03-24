@@ -27,11 +27,11 @@ struct Node {
 void print_root(const Node *root, std::ostream &os);
 std::ostream &operator<<(std::ostream &os,const Node &node);
 
-typedef std::list<Node*> Nodes;
-typedef std::list<Node*> Solution;
-typedef std::list<Solution> Solutions;
-
 struct SolveParams {
+    typedef std::list<Node*> Nodes;
+    typedef Nodes Solution;
+    typedef std::list<Nodes> Solutions;
+
     SolveParams(Node *root,size_t max_solution);
     void print_indent(std::ostream &os) const;
 

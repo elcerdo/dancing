@@ -1,18 +1,16 @@
-//#include <iostream>
-//#include <string>
-//#include <cassert>
-//#include <list>
-//
 #include "array.h"
 #include "dancing.h"
 #include <iostream>
+#include <list>
 
 using std::cin;
 using std::cerr;
 using std::cout;
 using std::endl;
 
-Node *build_structure(const Array &array, Nodes &collector) {
+typedef std::list<Node*> Collector;
+
+Node *build_structure(const Array &array, Collector &collector) {
     Node *root = new Node("root",-1);
     collector.push_back(root);
 
@@ -74,53 +72,20 @@ int main(int argc, char *argv[]) {
     cout << array;
 
     //building structure
-    Nodes collector;
+    Collector collector;
     Node *root = build_structure(array,collector);
     cout << "collector has " << collector.size() << " nodes ";
     cout << "expected " << array.width << "+" << array.height << "+1+" << array.get_number_of_ones() <<"=" << (array.width+array.height+1+array.get_number_of_ones()) << endl;
     print_root(root,cout);
 
-    //{ //folding tests
-    //cout << endl;
-    //Node *target0 = root->right->right->down->down;
-    //Node *target1 = root->right->right->right->down;
-
-    //print_root(root,cout);
-    //cout << "folding column " << target0->id[0] << endl;
-    //target0->fold_column();
-    //print_root(root,cout);
-    //cout << "folding row " << target0->id[1] << endl;
-    //target0->fold_row();
-    //print_root(root,cout);
-    //cout << "folding column " << target1->id[0] << endl;
-    //target1->fold_column();
-    //print_root(root,cout);
-    //cout << "folding row " << target1->id[1] << endl;
-    //target1->fold_row();
-    //print_root(root,cout);
-    //cout << "unfolding column " << target0->id[0] << endl;
-    //target0->unfold_column();
-    //print_root(root,cout);
-    //cout << "unfolding row " << target1->id[1] << endl;
-    //target1->unfold_row();
-    //print_root(root,cout);
-    //cout << "unfolding row " << target0->id[1] << endl;
-    //target0->unfold_row();
-    //print_root(root,cout);
-    //cout << "unfolding column " << target1->id[0] << endl;
-    //target1->unfold_column();
-    //print_root(root,cout);
-    //}
-
-    cout << endl << "SOLVING" << endl;
-
+    //solving
     SolveParams params(root,1);
     cout << "looking for  " << params.max_solution << " solution(s)" << endl;
     solve(params,cout);
     cout << "found " << params.solutions.size() << " solution(s)" << endl;
-    for (Solutions::iterator isolution=params.solutions.begin(); isolution!=params.solutions.end(); isolution++) {
+    for (SolveParams::Solutions::iterator isolution=params.solutions.begin(); isolution!=params.solutions.end(); isolution++) {
         cout << "solution=";
-        for (Solution::const_iterator i=isolution->begin(); i!=isolution->end(); i++) { cout << (*i)->id << " "; }
+        for (SolveParams::Solution::const_iterator i=isolution->begin(); i!=isolution->end(); i++) { cout << (*i)->id << " "; }
         cout << endl;
     }
 
