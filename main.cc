@@ -309,22 +309,44 @@ void print_root(const Node *root, std::ostream &os) {
 
 
 typedef std::list<Node*> Solution;
+typedef std::list<Solution> Solutions;
+
+struct SolveParams {
+    SolveParams(Node *root,size_t max_solution) : root(root), max_solution(max_solution), indent(0) {}
+    void print_indent(std::ostream &os) const {
+        for (int k=0; k<indent; k++) { os << "-"; };
+    }
+    Node *root;
+    Solution partial_solution;
+    Solutions solutions;
+    const size_t max_solution;
+    int indent;
+};
             
-bool solve(Node *root, Solution &partial_solution) {
+void solve(SolveParams &params) {
+    Node *root = params.root;
     print_root(root,cout);
+
     if (root->right == root and root->down == root) {
-        cout << "found solution" << endl;
-        return true;
+        params.print_indent(cout);
+        cout << "found solution ";
+        for (Solution::const_iterator i=params.partial_solution.begin(); i!=params.partial_solution.end(); i++) { cout << (*i)->id << " "; }
+        cout << endl;
+        params.solutions.push_back(params.partial_solution);
+        return;
     }
 
     Node *min_column = find_minimum_column(root);
     if (not min_column) {
+        params.print_indent(cout);
         cout << "no min column" << endl;
-        return false;
+        return;
     }
 
+    params.print_indent(cout);
     cout << "min column is " << min_column->id[0] << endl;
     for (Node *selected=min_column->down; selected!=min_column; selected=selected->down) {
+        params.print_indent(cout);
         cout << "selected row " << selected->headerleft->id[0] << endl;
 
         Nodes folded_columns;
@@ -340,19 +362,18 @@ bool solve(Node *root, Solution &partial_solution) {
 
         }
 
+        params.partial_solution.push_back(selected->headerleft);
+        params.indent++;
         for (Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->fold_column(); }
         for (Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->fold_row(); }
-        bool solved = solve(root,partial_solution);
+        solve(params);
         for (Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->unfold_column(); }
         for (Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->unfold_row(); }
+        params.partial_solution.pop_back();
+        params.indent--;
 
-        if (not solved) continue;
-
-        partial_solution.push_back(selected->headerleft);
-        return true;
+        if (params.solutions.size() >= params.max_solution) return;
     }
-
-    return false;
 }
 
 int main(int argc, char *argv[]) {
@@ -404,15 +425,16 @@ int main(int argc, char *argv[]) {
     print_root(root,cout);
     }
 
-    Solution solution;
     cout << endl << "SOLVING" << endl;
-    bool found = solve(root,solution);
-    cout << "found=" << found << endl;
-    cout << "solution=";
-    for (Solution::const_iterator i=solution.begin(); i!=solution.end(); i++) {
-        cout << (*i)->id << " ";
+    SolveParams params(root,2);
+    solve(params);
+    cout << "found " << params.solutions.size() << " solution(s)" << endl;
+    for (Solutions::iterator isolution=params.solutions.begin(); isolution!=params.solutions.end(); isolution++) {
+        cout << "solution=";
+        for (Solution::const_iterator i=isolution->begin(); i!=isolution->end(); i++) { cout << (*i)->id << " "; }
+        cout << endl;
     }
-    cout << endl;
+
     print_root(root,cout);
 
 	return 0;
