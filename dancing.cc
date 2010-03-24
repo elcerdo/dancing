@@ -154,7 +154,7 @@ Node *find_minimum_column(Node *root) {
 
 void solve(SolveParams &params, std::ostream &log) {
     Node *root = params.root;
-    print_root(root,log);
+    //print_root(root,log);
 
     if (root->right == root and root->down == root) {
         params.print_indent(log);
@@ -205,7 +205,7 @@ void solve(SolveParams &params, std::ostream &log) {
     }
 }
 
-void print_root(const Node *root, std::ostream &os) {
+void print_root_as_array(const Node *root, std::ostream &os) {
     if (root->right == root and root->down == root) {
         os << "null matrix" << endl;
         return;

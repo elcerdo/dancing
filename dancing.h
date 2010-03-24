@@ -24,7 +24,7 @@ struct Node {
     const int data;
 };
 
-void print_root(const Node *root, std::ostream &os);
+void print_root_as_array(const Node *root, std::ostream &os);
 std::ostream &operator<<(std::ostream &os,const Node &node);
 
 struct SolveParams {

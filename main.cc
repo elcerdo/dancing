@@ -61,6 +61,10 @@ Node *build_structure(const Array &array, Collector &collector) {
     return root;
 }
 
+void delete_collector(Collector &collector) {
+    for (Collector::iterator i=collector.begin(); i!=collector.end(); i++) { delete *i; }
+}
+
 int main(int argc, char *argv[]) {
     //loading array
     std::istream &input = cin;
@@ -76,7 +80,7 @@ int main(int argc, char *argv[]) {
     Node *root = build_structure(array,collector);
     cout << "collector has " << collector.size() << " nodes ";
     cout << "expected " << array.width << "+" << array.height << "+1+" << array.get_number_of_ones() <<"=" << (array.width+array.height+1+array.get_number_of_ones()) << endl;
-    print_root(root,cout);
+    print_root_as_array(root,cout);
 
     //solving
     SolveParams params(root,1);
@@ -89,7 +93,10 @@ int main(int argc, char *argv[]) {
         cout << endl;
     }
 
-    print_root(root,cout);
+    print_root_as_array(root,cout);
+
+    //delete collector
+    delete_collector(collector);
 
 	return 0;
 }
