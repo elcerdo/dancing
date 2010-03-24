@@ -331,10 +331,16 @@ bool solve(Node *root, Solution &partial_solution) {
 }
 
 int main(int argc, char *argv[]) {
-	Array array(7,6);
-	if (not array.parse(cin)) { cerr << "error while parsing array\n"; return 1; }
+    //loading array
+    std::istream &input = cin;
+    int width,height;
+    input >> width >> std::ws >> height >> std::ws;
+    if (input.bad()) { cerr << "error while finding array dimensions" << endl; return 1; }
+	Array array(width,height);
+	if (not array.parse(input)) { cerr << "error while parsing array\n"; return 1; }
     cout << array;
 
+    //building structure
     Nodes collector;
     Node *root = build_structure(array,collector);
     cout << "collector has " << collector.size() << " nodes ";
