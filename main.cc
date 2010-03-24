@@ -153,6 +153,42 @@ struct Node {
         } while (element != this->headertop);
     }
 
+    void fold_row() {
+        assert(this->headerleft->data != -1); //this is not the columns row
+        Node *element = this->headerleft;
+        do {
+            assert(element->down != NULL); //already folded
+
+            //find first top unfolded element
+            Node *targeting = element->top;
+            while (targeting->down == NULL) { targeting = targeting->top; }
+            assert(targeting!=element);
+
+            targeting->down = element->down;
+            element->down = NULL;
+
+            element = element->left;
+        } while (element != this->headerleft);
+    }
+
+    void unfold_row() {
+        assert(this->headerleft->data != -1); //this is not the rows column
+        Node *element = this->headerleft;
+        do {
+            assert(element->down == NULL); //not folded
+
+            //find first top unfolded element
+            Node *targeting = element->top;
+            while (targeting->down == NULL) { targeting = targeting->top; }
+            assert(targeting!=element);
+
+            element->down = targeting->down;
+            targeting->down = element;
+
+            element = element->left;
+        } while (element != this->headerleft);
+    }
+
 	Node *headertop,*headerleft;
 	Node *left,*right;
 	Node *top,*down;
@@ -245,7 +281,7 @@ Node *find_minimum_column(Node *root) {
 }
 
 void print_root(const Node *root, std::ostream &os) {
-    os << endl << " ";
+    os << " ";
     for (Node *column=root->right; column!=root; column=column->right) { os << column->id[0]; }
     os << endl;
 
@@ -297,30 +333,43 @@ bool solve(Node *root, Solution &partial_solution) {
 int main(int argc, char *argv[]) {
 	Array array(7,6);
 	if (not array.parse(cin)) { cerr << "error while parsing array\n"; return 1; }
-    cout << array << endl;
+    cout << array;
 
     Nodes collector;
     Node *root = build_structure(array,collector);
     cout << "collector has " << collector.size() << " nodes ";
     cout << "expected " << array.width << "+" << array.height << "+1+" << array.get_number_of_ones() <<"=" << (array.width+array.height+1+array.get_number_of_ones()) << endl;
-    //for (Nodes::const_iterator i=collector.begin(); i!=collector.end(); i++) { 
-    //    cout << **i << endl;
-    //}
+    print_root(root,cout);
 
-    {
+    { //folding tests
+    cout << endl;
     Node *target0 = root->right->right->down->down;
-    Node *target1 = root->right->right->right;
-    cout << *target0 << endl;
-    cout << *target1 << endl;
+    Node *target1 = root->right->right->right->down;
 
     print_root(root,cout);
+    cout << "folding column " << target0->id[0] << endl;
     target0->fold_column();
     print_root(root,cout);
+    cout << "folding row " << target0->id[1] << endl;
+    target0->fold_row();
+    print_root(root,cout);
+    cout << "folding column " << target1->id[0] << endl;
     target1->fold_column();
     print_root(root,cout);
-    target1->unfold_column();
+    cout << "folding row " << target1->id[1] << endl;
+    target1->fold_row();
     print_root(root,cout);
+    cout << "unfolding column " << target0->id[0] << endl;
     target0->unfold_column();
+    print_root(root,cout);
+    cout << "unfolding row " << target1->id[1] << endl;
+    target1->unfold_row();
+    print_root(root,cout);
+    cout << "unfolding row " << target0->id[1] << endl;
+    target0->unfold_row();
+    print_root(root,cout);
+    cout << "unfolding column " << target1->id[0] << endl;
+    target1->unfold_column();
     print_root(root,cout);
     }
 
