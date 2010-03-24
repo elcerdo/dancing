@@ -2,6 +2,7 @@
 #include <string>
 #include <cassert>
 #include <list>
+#include <algorithm>
 
 using std::endl;
 using std::cin;
@@ -269,9 +270,9 @@ Node *find_minimum_column(Node *root) {
         int length = 0;
         for (Node *element=column->down; element!=column; element=element->down) { length++; }
 
-        cout << *column << " -> " << length << endl;
+        if (length == 0) return NULL;
 
-        if (length > 0 && (column_min == NULL || length < length_min)) {
+        if (column_min == NULL || length < length_min) {
             length_min = length;
             column_min = column;
         }
@@ -281,6 +282,11 @@ Node *find_minimum_column(Node *root) {
 }
 
 void print_root(const Node *root, std::ostream &os) {
+    if (root->right == root and root->down == root) {
+        os << "null matrix" << endl;
+        return;
+    }
+
     os << " ";
     for (Node *column=root->right; column!=root; column=column->right) { os << column->id[0]; }
     os << endl;
@@ -302,10 +308,11 @@ void print_root(const Node *root, std::ostream &os) {
 }
 
 
-typedef std::list<int> Solution;
+typedef std::list<Node*> Solution;
             
 bool solve(Node *root, Solution &partial_solution) {
-    if (not root->down) {
+    print_root(root,cout);
+    if (root->right == root and root->down == root) {
         cout << "found solution" << endl;
         return true;
     }
@@ -316,18 +323,36 @@ bool solve(Node *root, Solution &partial_solution) {
         return false;
     }
 
-    cout << "min column is " << *min_column << endl;
+    cout << "min column is " << min_column->id[0] << endl;
+    for (Node *selected=min_column->down; selected!=min_column; selected=selected->down) {
+        cout << "selected row " << selected->headerleft->id[0] << endl;
 
-    return true;
+        Nodes folded_columns;
+        Nodes folded_rows;
+        for (Node *element_row=selected->headerleft->right; element_row!=selected->headerleft; element_row=element_row->right) {
+            Node *column = element_row->headertop;
+            folded_columns.push_back(column);
+            for (Node *element_column=column->down; element_column!=column; element_column=element_column->down) {
+                Node *row = element_column->headerleft;
+                bool row_foldable = (std::find(folded_rows.begin(),folded_rows.end(),row) == folded_rows.end());
+                if (row_foldable) folded_rows.push_back(row);
+            }
 
-    Node *row = min_column->down;
-    while (row) {
-        cout << "trying row " << *row << endl;
+        }
 
-        row = row->down;
+        for (Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->fold_column(); }
+        for (Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->fold_row(); }
+        bool solved = solve(root,partial_solution);
+        for (Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->unfold_column(); }
+        for (Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->unfold_row(); }
+
+        if (not solved) continue;
+
+        partial_solution.push_back(selected->headerleft);
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 int main(int argc, char *argv[]) {
@@ -383,10 +408,12 @@ int main(int argc, char *argv[]) {
     cout << endl << "SOLVING" << endl;
     bool found = solve(root,solution);
     cout << "found=" << found << endl;
+    cout << "solution=";
     for (Solution::const_iterator i=solution.begin(); i!=solution.end(); i++) {
-        cout << *i << " ";
+        cout << (*i)->id << " ";
     }
     cout << endl;
+    print_root(root,cout);
 
 	return 0;
 }
