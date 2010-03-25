@@ -43,7 +43,7 @@ Node *build_structure(Collector &collector) {
             for (int k=0; k<9; k++) {
                 char id[256];
                 snprintf(id,256,"%d in (%d,%d)",k+1,i,j);
-                Node *row = new Node(id,Node::LINK);
+                Node *row = new Node(id,Node::MOVE);
                 collector.push_back(row);
                 root->insert_top(row);
 
@@ -89,8 +89,8 @@ void play_number(Node *root,int i, int j, int k, SolveParams &params) {
     for (SolveParams::Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->fold_column(); }
     for (SolveParams::Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->fold_row(); }
 
-    cout << row->id << " -> ";
-    for (Node *element=row->left; element!=row; element=element->left) { cout << element->headertop->id << " "; }
+    cout << *row << " -> ";
+    for (Node *element=row->left; element!=row; element=element->left) { cout << *element->headertop << " "; }
     cout << endl;
 }
 
@@ -99,15 +99,15 @@ void print_root_as_sukodu(const Node *root, std::ostream &os) {
     for (Node *row=root->down; row!=root; row=row->down) { possible_count++; }
     os << "root has " << possible_count << " possible moves" << endl;
     for (Node *row=root->down; row!=root; row=row->down) {
-        os << row->id << " -> ";
-        for (Node *element=row->right; element!=row; element=element->right) { os << element->headertop->id << " "; }
+        os << *row << " -> ";
+        for (Node *element=row->right; element!=row; element=element->right) { os << *element->headertop << " "; }
         os << endl;
     }
 
     int requirement_count = 0;
     for (Node *column=root->right; column!=root; column=column->right) { requirement_count++; }
     os << "root has " << requirement_count << " requirements" << endl;
-    for (Node *column=root->right; column!=root; column=column->right) { os << column->id << endl; }
+    for (Node *column=root->right; column!=root; column=column->right) { os << *column << endl; }
 }
 
 int main(int argc, char *argv[]) {
@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
     for (SolveParams::Solutions::iterator isolution=params.solutions.begin(); isolution!=params.solutions.end(); isolution++) {
         assert(isolution->size() == 9);
         cout << "solution=";
-        for (SolveParams::Solution::const_iterator i=isolution->begin(); i!=isolution->end(); i++) { cout << (*i)->id << " "; }
+        for (SolveParams::Solution::const_iterator i=isolution->begin(); i!=isolution->end(); i++) { cout << **i << " "; }
         cout << endl;
     }
 

@@ -47,8 +47,8 @@ Node *build_structure(const Array &array, Collector &collector) {
         for (Node *row=root->down; row!=root; row=row->down) {
             if (array.get_value(i,j)) {
                 Node::Id element_id("  ");
-                element_id[0] = column->id[0];
-                element_id[1] = row->id[0];
+                element_id[0] = column->get_id()[0];
+                element_id[1] = row->get_id()[0];
 
                 Node *element = new Node(element_id,Node::LINK);
                 column->insert_top(element);
@@ -70,11 +70,11 @@ void print_root_as_array(const Node *root, std::ostream &os) {
     }
 
     os << " ";
-    for (Node *column=root->right; column!=root; column=column->right) { os << column->id[0]; }
+    for (Node *column=root->right; column!=root; column=column->right) { os << column->get_id()[0]; }
     os << endl;
 
     for (Node *row=root->down; row!=root; row=row->down) {
-        os << row->id[0];
+        os << row->get_id()[0];
         Node *element = row->right;
         for (Node *column=root->right; column!=root; column=column->right) {
             if (column==element->headertop) {
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
     cout << "found " << params.solutions.size() << " solution(s)" << endl;
     for (SolveParams::Solutions::iterator isolution=params.solutions.begin(); isolution!=params.solutions.end(); isolution++) {
         cout << "solution=";
-        for (SolveParams::Solution::const_iterator i=isolution->begin(); i!=isolution->end(); i++) { cout << (*i)->id << " "; }
+        for (SolveParams::Solution::const_iterator i=isolution->begin(); i!=isolution->end(); i++) { cout << **i << " "; }
         cout << endl;
     }
 

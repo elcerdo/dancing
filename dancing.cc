@@ -8,6 +8,9 @@ using std::endl;
 
 Node::Node(const Id &id, Node::Type type) : headertop(this), headerleft(this), left(this), right(this), top(this), down(this), id(id), type(type) {}
 
+const Node::Id &Node::get_id() const { return id; }
+const Node::Type &Node::get_type() const { return type; }
+
 void Node::insert_right(Node *node) {
     Node *list_right = this->right;
     this->right = node;
@@ -117,8 +120,7 @@ void Node::unfold_row() {
 }
 
 std::ostream &operator<<(std::ostream &os,const Node &node) {
-    os << node.id << " ";
-    switch (node.type) {
+    switch (node.get_type()) {
     case Node::ROOT:
         os << "ROOT";
         break;
@@ -133,12 +135,13 @@ std::ostream &operator<<(std::ostream &os,const Node &node) {
         break;
     }
     os << " ";
-    os << " headerleft=" << (node.headerleft==&node ? "self" : node.headerleft->id);
-    os << " left=" << (node.left==&node ? "self" : node.left->id);
-    os << " right=" << (node.right==&node ? "self" : node.right->id);
-    os << " headertop=" << (node.headertop==&node ? "self" : node.headertop->id);
-    os << " top=" << (node.top==&node ? "self" : node.top->id);
-    os << " down=" << (node.down==&node ? "self" : node.down->id);
+    os << node.get_id() << " ";
+    //os << " headerleft=" << (node.headerleft==&node ? "self" : node.headerleft->get_id());
+    //os << " left=" << (node.left==&node ? "self" : node.left->get_id());
+    //os << " right=" << (node.right==&node ? "self" : node.right->get_id());
+    //os << " headertop=" << (node.headertop==&node ? "self" : node.headertop->get_id());
+    //os << " top=" << (node.top==&node ? "self" : node.top->get_id());
+    //os << " down=" << (node.down==&node ? "self" : node.down->get_id());
     return os;
 }
 
@@ -174,7 +177,7 @@ void solve(SolveParams &params, std::ostream &log) {
     if (root->right == root and root->down == root) {
         params.print_indent(log);
         log << "found solution ";
-        for (SolveParams::Solution::const_iterator i=params.partial_solution.begin(); i!=params.partial_solution.end(); i++) { log << (*i)->id << " "; }
+        for (SolveParams::Solution::const_iterator i=params.partial_solution.begin(); i!=params.partial_solution.end(); i++) { log << **i << " "; }
         log << endl;
         params.solutions.push_back(params.partial_solution);
         return;
@@ -188,10 +191,10 @@ void solve(SolveParams &params, std::ostream &log) {
     }
 
     params.print_indent(log);
-    log << "min column is " << min_column->id << endl;
+    log << "min column is " << *min_column << endl;
     for (Node *selected=min_column->down; selected!=min_column; selected=selected->down) {
         params.print_indent(log);
-        log << "selected row " << selected->headerleft->id << endl;
+        log << "selected row " << *selected->headerleft << endl;
 
         SolveParams::Nodes folded_columns;
         SolveParams::Nodes folded_rows;

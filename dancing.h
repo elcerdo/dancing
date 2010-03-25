@@ -22,6 +22,10 @@ struct Node {
 	Node *left,*right;
 	Node *top,*down;
 
+    const Id &get_id() const;
+    const Type &get_type() const;
+
+protected:
 	const Id id;
     const Type type;
 };
