@@ -1,11 +1,11 @@
 CXX=g++
 CC=g++
 CXXFLAGS=-g -Wall
-LDFLAGS=-lefence
+LDFLAGS=-g -lefence
 
-all: main
+all: solve_array
 
-main: main.o array.o dancing.o
+solve_array: solve_array.o array.o dancing.o
 
 clean:
 	$(RM) main *.o
