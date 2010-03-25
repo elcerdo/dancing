@@ -3,10 +3,12 @@ CC=g++
 CXXFLAGS=-g -Wall
 LDFLAGS=-g -lefence
 
-all: solve_array
+all: solve_array solve_sudoku
 
 solve_array: solve_array.o array.o dancing.o
 
+solve_sudoku: solve_sudoku.o dancing.o
+
 clean:
-	$(RM) main *.o
+	$(RM) solve_sudoku solve_array *.o
 

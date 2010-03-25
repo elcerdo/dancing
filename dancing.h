@@ -44,4 +44,8 @@ struct SolveParams {
 Node *find_minimum_column(Node *root);
 void solve(SolveParams &params, std::ostream &log);
 
+typedef std::list<Node*> Collector;
+
+void delete_collector(Collector &collector);
+
 #endif

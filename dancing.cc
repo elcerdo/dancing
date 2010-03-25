@@ -173,10 +173,10 @@ void solve(SolveParams &params, std::ostream &log) {
     }
 
     params.print_indent(log);
-    log << "min column is " << min_column->id[0] << endl;
+    log << "min column is " << min_column->id << endl;
     for (Node *selected=min_column->down; selected!=min_column; selected=selected->down) {
         params.print_indent(log);
-        log << "selected row " << selected->headerleft->id[0] << endl;
+        log << "selected row " << selected->headerleft->id << endl;
 
         SolveParams::Nodes folded_columns;
         SolveParams::Nodes folded_rows;
@@ -203,5 +203,9 @@ void solve(SolveParams &params, std::ostream &log) {
 
         if (params.solutions.size() >= params.max_solution) return;
     }
+}
+
+void delete_collector(Collector &collector) {
+    for (Collector::iterator i=collector.begin(); i!=collector.end(); i++) { delete *i; }
 }
 

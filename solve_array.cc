@@ -1,15 +1,12 @@
 #include "array.h"
 #include "dancing.h"
 #include <iostream>
-#include <list>
 #include <cassert>
 
 using std::cin;
 using std::cerr;
 using std::cout;
 using std::endl;
-
-typedef std::list<Node*> Collector;
 
 Node *build_structure(const Array &array, Collector &collector) {
     Node *root = new Node("root",-1);
@@ -88,9 +85,6 @@ void print_root_as_array(const Node *root, std::ostream &os) {
     }
 }
 
-void delete_collector(Collector &collector) {
-    for (Collector::iterator i=collector.begin(); i!=collector.end(); i++) { delete *i; }
-}
 
 int main(int argc, char *argv[]) {
     //loading array
