@@ -6,9 +6,14 @@
 
 struct Node {
     typedef std::string Id;
+    typedef std::list<Node*> Collector;
     enum Type {ROOT,MOVE,CONSTRAINT,LINK};
 
-	Node(const Id &id, Type type);
+    static Node *create_root(Collector &collector);
+    static Node *add_constraint(Node *root, Collector &collector,const Id &id);
+    static Node *add_move(Node *root, Collector &collector, const Id &id);
+    static Node *add_link(Node *move, Node *constraint, Collector &collector, const Id &id);
+
     void insert_right(Node *node);
     void insert_left(Node *node);
     void insert_down(Node *node);
@@ -26,11 +31,14 @@ struct Node {
     const Type &get_type() const;
 
 protected:
+	Node(const Id &id, Type type);
+
 	const Id id;
     const Type type;
 };
 
 std::ostream &operator<<(std::ostream &os,const Node &node);
+void delete_collector(Node::Collector &collector);
 
 struct SolveParams {
     typedef std::list<Node*> Nodes;
@@ -47,11 +55,6 @@ struct SolveParams {
     int indent;
 };
 
-Node *find_minimum_column(Node *root);
 void solve(SolveParams &params, std::ostream &log);
-
-typedef std::list<Node*> Collector;
-
-void delete_collector(Collector &collector);
 
 #endif

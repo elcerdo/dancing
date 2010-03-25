@@ -6,6 +6,38 @@
 
 using std::endl;
 
+Node *Node::create_root(Node::Collector &collector) {
+    Node *root = new Node("root",Node::ROOT);
+    collector.push_back(root);
+    return root;
+}
+
+Node *Node::add_constraint(Node *root, Node::Collector &collector, const Node::Id &id) {
+    assert(root->type == ROOT);
+    Node *constraint = new Node(id,Node::CONSTRAINT);
+    root->insert_left(constraint);
+    collector.push_back(constraint);
+    return constraint;
+}
+
+Node *Node::add_move(Node *root, Node::Collector &collector, const Node::Id &id) {
+    assert(root->type == ROOT);
+    Node *move = new Node(id,Node::MOVE);
+    root->insert_top(move);
+    collector.push_back(move);
+    return move;
+}
+
+Node *Node::add_link(Node *move, Node *constraint, Node::Collector &collector, const Node::Id &id) {
+    assert(constraint->type == CONSTRAINT);
+    assert(move->type == MOVE);
+    Node *link = new Node(id,Node::LINK);
+    constraint->insert_top(link);
+    move->insert_left(link);
+    collector.push_back(link);
+    return link;
+}
+
 Node::Node(const Id &id, Node::Type type) : headertop(this), headerleft(this), left(this), right(this), top(this), down(this), id(id), type(type) {}
 
 const Node::Id &Node::get_id() const { return id; }
@@ -135,7 +167,7 @@ std::ostream &operator<<(std::ostream &os,const Node &node) {
         break;
     }
     os << " ";
-    os << node.get_id() << " ";
+    os << node.get_id(); // << " ";
     //os << " headerleft=" << (node.headerleft==&node ? "self" : node.headerleft->get_id());
     //os << " left=" << (node.left==&node ? "self" : node.left->get_id());
     //os << " right=" << (node.right==&node ? "self" : node.right->get_id());
@@ -151,7 +183,7 @@ void SolveParams::print_indent(std::ostream &os) const {
     for (int k=0; k<indent; k++) { os << "-"; };
 }
 
-Node *find_minimum_column(Node *root) {
+static Node *find_minimum_column(Node *root) {
     Node *column_min = NULL;
     int length_min = 0;
 
@@ -223,7 +255,7 @@ void solve(SolveParams &params, std::ostream &log) {
     }
 }
 
-void delete_collector(Collector &collector) {
-    for (Collector::iterator i=collector.begin(); i!=collector.end(); i++) { delete *i; }
+void delete_collector(Node::Collector &collector) {
+    for (Node::Collector::iterator i=collector.begin(); i!=collector.end(); i++) { delete *i; }
 }
 

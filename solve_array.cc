@@ -8,36 +8,21 @@ using std::cerr;
 using std::cout;
 using std::endl;
 
-Node *build_structure(const Array &array, Collector &collector) {
-    Node *root = new Node("root",Node::ROOT);
-    collector.push_back(root);
+Node *build_structure(const Array &array, Node::Collector &collector) {
+    Node *root = Node::create_root(collector);
 
-    { //create columns row
-    Node *column_prec = root;
+    //create constaints
     for (int j=0; j<array.width; j++) {
-        Node::Id column_id("a constraint");
-        column_id[0]+=j;
-
-        Node *column = new Node(column_id,Node::CONSTRAINT);
-        column_prec->insert_right(column);
-        collector.push_back(column);
-
-        column_prec = column;
-    }
+        Node::Id id("a constraint");
+        id[0]+=j;
+        Node::add_constraint(root,collector,id);
     }
 
-    { //create rows column
-    Node *row_prec = root;
+    //create moves
     for (int i=0; i<array.height; i++) {
-        Node::Id row_id("0 move");
-        row_id[0]+=i;
-        
-        Node *row = new Node(row_id,Node::MOVE);
-        row_prec->insert_down(row);
-        collector.push_back(row);
-
-        row_prec = row;
-    }
+        Node::Id id("0 move");
+        id[0]+=i;
+        Node::add_move(root,collector,id);
     }
 
     //insert ones in the structure
@@ -46,14 +31,10 @@ Node *build_structure(const Array &array, Collector &collector) {
         int i=0;
         for (Node *row=root->down; row!=root; row=row->down) {
             if (array.get_value(i,j)) {
-                Node::Id element_id("  ");
-                element_id[0] = column->get_id()[0];
-                element_id[1] = row->get_id()[0];
-
-                Node *element = new Node(element_id,Node::LINK);
-                column->insert_top(element);
-                row->insert_left(element);
-                collector.push_back(element);
+                Node::Id id("  ");
+                id[0] = column->get_id()[0];
+                id[1] = row->get_id()[0];
+                Node::add_link(row,column,collector,id);
             }
             i++;
         }
@@ -101,7 +82,7 @@ int main(int argc, char *argv[]) {
     cout << array;
 
     //building structure
-    Collector collector;
+    Node::Collector collector;
     Node *root = build_structure(array,collector);
     cout << "collector has " << collector.size() << " nodes ";
     cout << "expected " << array.width << "+" << array.height << "+1+" << array.get_number_of_ones() <<"=" << (array.width+array.height+1+array.get_number_of_ones()) << endl;

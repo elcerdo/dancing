@@ -7,21 +7,15 @@
 using std::cout;
 using std::endl;
 
-Node *build_structure(Collector &collector) {
-    Node *root = new Node("root",Node::ROOT);
-    collector.push_back(root);
+Node *build_structure(Node::Collector &collector) {
+    Node *root = Node::create_root(collector);
     
     Node *any_number[3][3];
     for (int i=0; i<3; i++) {
         for (int j=0; j<3; j++) {
             char id[256];
             snprintf(id,256,"any number in (%d,%d)",i,j);
-
-            Node *column = new Node(id,Node::CONSTRAINT);
-            collector.push_back(column);
-            any_number[i][j] = column;
-
-            root->insert_left(column);
+            any_number[i][j] = Node::add_constraint(root,collector,id);
         }
     }
 
@@ -29,34 +23,18 @@ Node *build_structure(Collector &collector) {
     for (int k=0; k<9; k++) {
         char id[256];
         snprintf(id,256,"must have a %d",k+1);
-
-        Node *column = new Node(id,Node::CONSTRAINT);
-        collector.push_back(column);
-        must_number[k] = column;
-
-        root->insert_left(column);
+        must_number[k] = Node::add_constraint(root,collector,id);
     }
 
     for (int i=0; i<3; i++) {
         for (int j=0; j<3; j++) {
-            Node *any_number_column = any_number[i][j];
             for (int k=0; k<9; k++) {
                 char id[256];
                 snprintf(id,256,"%d in (%d,%d)",k+1,i,j);
-                Node *row = new Node(id,Node::MOVE);
-                collector.push_back(row);
-                root->insert_top(row);
+                Node *move = Node::add_move(root,collector,id);
 
-                Node *element_any = new Node("a",Node::LINK);
-                collector.push_back(element_any);
-                row->insert_left(element_any);
-                any_number_column->insert_top(element_any);
-
-                Node *element_must = new Node("m",Node::LINK);
-                collector.push_back(element_must);
-                row->insert_left(element_must);
-                must_number[k]->insert_top(element_must);
-
+                Node::add_link(move,any_number[i][j],collector,"any link");
+                Node::add_link(move,must_number[k],collector,"must link");
             }
         }
     }
@@ -111,7 +89,7 @@ void print_root_as_sukodu(const Node *root, std::ostream &os) {
 }
 
 int main(int argc, char *argv[]) {
-    Collector collector;
+    Node::Collector collector;
     Node *root = build_structure(collector);
     cout << "collector has " << collector.size() << " nodes" << endl;
 
