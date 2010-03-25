@@ -2,6 +2,7 @@
 #include "dancing.h"
 #include <iostream>
 #include <list>
+#include <cassert>
 
 using std::cin;
 using std::cerr;
@@ -59,6 +60,32 @@ Node *build_structure(const Array &array, Collector &collector) {
     }
 
     return root;
+}
+
+void print_root_as_array(const Node *root, std::ostream &os) {
+    if (root->right == root and root->down == root) {
+        os << "null matrix" << endl;
+        return;
+    }
+
+    os << " ";
+    for (Node *column=root->right; column!=root; column=column->right) { os << column->id[0]; }
+    os << endl;
+
+    for (Node *row=root->down; row!=root; row=row->down) {
+        os << row->id[0];
+        Node *element = row->right;
+        for (Node *column=root->right; column!=root; column=column->right) {
+            if (column==element->headertop) {
+                os << "1";
+                element = element->right;
+            } else {
+                os << "0";
+            }
+        }
+        assert(element==row);
+        os << endl;
+    }
 }
 
 void delete_collector(Collector &collector) {
