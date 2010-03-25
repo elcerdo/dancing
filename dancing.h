@@ -6,8 +6,9 @@
 
 struct Node {
     typedef std::string Id;
+    enum Type {ROOT,MOVE,CONSTRAINT,LINK};
 
-	Node(const Id &id, int data);
+	Node(const Id &id, Type type);
     void insert_right(Node *node);
     void insert_left(Node *node);
     void insert_down(Node *node);
@@ -20,8 +21,9 @@ struct Node {
 	Node *headertop,*headerleft;
 	Node *left,*right;
 	Node *top,*down;
+
 	const Id id;
-    const int data;
+    const Type type;
 };
 
 std::ostream &operator<<(std::ostream &os,const Node &node);

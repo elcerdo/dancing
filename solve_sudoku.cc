@@ -8,7 +8,7 @@ using std::cout;
 using std::endl;
 
 Node *build_structure(Collector &collector) {
-    Node *root = new Node("root",-1);
+    Node *root = new Node("root",Node::ROOT);
     collector.push_back(root);
     
     Node *any_number[3][3];
@@ -17,7 +17,7 @@ Node *build_structure(Collector &collector) {
             char id[256];
             snprintf(id,256,"any number in (%d,%d)",i,j);
 
-            Node *column = new Node(id,-2);
+            Node *column = new Node(id,Node::CONSTRAINT);
             collector.push_back(column);
             any_number[i][j] = column;
 
@@ -30,7 +30,7 @@ Node *build_structure(Collector &collector) {
         char id[256];
         snprintf(id,256,"must have a %d",k+1);
 
-        Node *column = new Node(id,-3);
+        Node *column = new Node(id,Node::CONSTRAINT);
         collector.push_back(column);
         must_number[k] = column;
 
@@ -43,16 +43,16 @@ Node *build_structure(Collector &collector) {
             for (int k=0; k<9; k++) {
                 char id[256];
                 snprintf(id,256,"%d in (%d,%d)",k+1,i,j);
-                Node *row = new Node(id,-4);
+                Node *row = new Node(id,Node::LINK);
                 collector.push_back(row);
                 root->insert_top(row);
 
-                Node *element_any = new Node("a",1);
+                Node *element_any = new Node("a",Node::LINK);
                 collector.push_back(element_any);
                 row->insert_left(element_any);
                 any_number_column->insert_top(element_any);
 
-                Node *element_must = new Node("m",2);
+                Node *element_must = new Node("m",Node::LINK);
                 collector.push_back(element_must);
                 row->insert_left(element_must);
                 must_number[k]->insert_top(element_must);
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
     play_number(root,1,0,4,params);
     play_number(root,1,2,5,params);
     print_root_as_sukodu(root,cout);
-    cout << "looking for  " << params.max_solution << " solution(s)" << endl;
+    cout << "looking for " << params.max_solution << " solution(s)" << endl;
     solve(params,cout);
     cout << "found " << params.solutions.size() << " solution(s)" << endl;
     for (SolveParams::Solutions::iterator isolution=params.solutions.begin(); isolution!=params.solutions.end(); isolution++) {

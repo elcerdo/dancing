@@ -6,7 +6,7 @@
 
 using std::endl;
 
-Node::Node(const Id &id, int data) : headertop(this), headerleft(this), left(this), right(this), top(this), down(this), id(id), data(data) {}
+Node::Node(const Id &id, Node::Type type) : headertop(this), headerleft(this), left(this), right(this), top(this), down(this), id(id), type(type) {}
 
 void Node::insert_right(Node *node) {
     Node *list_right = this->right;
@@ -45,7 +45,7 @@ void Node::insert_top(Node *node) {
 }
 
 void Node::fold_column() {
-    assert(this->headertop->data != -1); //this is not the rows column
+    assert(this->type == LINK or this->type == CONSTRAINT); //this is not the rows column
     Node *element = this->headertop;
     do {
         assert(element->right != NULL); //already folded;
@@ -63,7 +63,7 @@ void Node::fold_column() {
 }
 
 void Node::unfold_column() {
-    assert(this->headertop->data != -1); //this is not the rows column
+    assert(this->type == LINK or this->type == CONSTRAINT); //this is not the rows column
     Node *element = this->headertop;
     do {
         assert(element->right == NULL); //not folded
@@ -81,7 +81,7 @@ void Node::unfold_column() {
 }
 
 void Node::fold_row() {
-    assert(this->headerleft->data != -1); //this is not the columns row
+    assert(this->type == LINK or this->type == MOVE); //this is not the columns row
     Node *element = this->headerleft;
     do {
         assert(element->down != NULL); //already folded
@@ -99,7 +99,7 @@ void Node::fold_row() {
 }
 
 void Node::unfold_row() {
-    assert(this->headerleft->data != -1); //this is not the rows column
+    assert(this->type == LINK or this->type == MOVE); //this is not the columns row
     Node *element = this->headerleft;
     do {
         assert(element->down == NULL); //not folded
@@ -117,7 +117,22 @@ void Node::unfold_row() {
 }
 
 std::ostream &operator<<(std::ostream &os,const Node &node) {
-    os << node.id << " " << node.data;
+    os << node.id << " ";
+    switch (node.type) {
+    case Node::ROOT:
+        os << "ROOT";
+        break;
+    case Node::CONSTRAINT:
+        os << "CONSTRAINT";
+        break;
+    case Node::MOVE:
+        os << "MOVE";
+        break;
+    case Node::LINK:
+        os << "LINK";
+        break;
+    }
+    os << " ";
     os << " headerleft=" << (node.headerleft==&node ? "self" : node.headerleft->id);
     os << " left=" << (node.left==&node ? "self" : node.left->id);
     os << " right=" << (node.right==&node ? "self" : node.right->id);

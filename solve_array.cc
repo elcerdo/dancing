@@ -9,16 +9,16 @@ using std::cout;
 using std::endl;
 
 Node *build_structure(const Array &array, Collector &collector) {
-    Node *root = new Node("root",-1);
+    Node *root = new Node("root",Node::ROOT);
     collector.push_back(root);
 
     { //create columns row
     Node *column_prec = root;
     for (int j=0; j<array.width; j++) {
-        Node::Id column_id("ac");
+        Node::Id column_id("a constraint");
         column_id[0]+=j;
 
-        Node *column = new Node(column_id,j);
+        Node *column = new Node(column_id,Node::CONSTRAINT);
         column_prec->insert_right(column);
         collector.push_back(column);
 
@@ -29,10 +29,10 @@ Node *build_structure(const Array &array, Collector &collector) {
     { //create rows column
     Node *row_prec = root;
     for (int i=0; i<array.height; i++) {
-        Node::Id row_id("0r");
+        Node::Id row_id("0 move");
         row_id[0]+=i;
         
-        Node *row = new Node(row_id,i);
+        Node *row = new Node(row_id,Node::MOVE);
         row_prec->insert_down(row);
         collector.push_back(row);
 
@@ -41,19 +41,23 @@ Node *build_structure(const Array &array, Collector &collector) {
     }
 
     //insert ones in the structure
+    int j=0;
     for (Node *column=root->right; column!=root; column=column->right) {
+        int i=0;
         for (Node *row=root->down; row!=root; row=row->down) {
-            if (array.get_value(row->data,column->data)) {
-                Node::Id row_id("a0");
-                row_id[0]+=column->data;
-                row_id[1]+=row->data;
+            if (array.get_value(i,j)) {
+                Node::Id element_id("  ");
+                element_id[0] = column->id[0];
+                element_id[1] = row->id[0];
 
-                Node *element = new Node(row_id,-1);
+                Node *element = new Node(element_id,Node::LINK);
                 column->insert_top(element);
                 row->insert_left(element);
                 collector.push_back(element);
             }
+            i++;
         }
+        j++;
     }
 
     return root;
@@ -105,7 +109,7 @@ int main(int argc, char *argv[]) {
 
     //solving
     SolveParams params(root,1);
-    cout << "looking for  " << params.max_solution << " solution(s)" << endl;
+    cout << "looking for " << params.max_solution << " solution(s)" << endl;
     solve(params,cout);
     cout << "found " << params.solutions.size() << " solution(s)" << endl;
     for (SolveParams::Solutions::iterator isolution=params.solutions.begin(); isolution!=params.solutions.end(); isolution++) {
