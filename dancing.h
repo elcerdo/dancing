@@ -14,24 +14,26 @@ struct Node {
     static Node *add_move(Node *root, Collector &collector, const Id &id);
     static Node *add_link(Node *move, Node *constraint, Collector &collector, const Id &id);
 
-    void insert_right(Node *node);
-    void insert_left(Node *node);
-    void insert_down(Node *node);
-    void insert_top(Node *node);
     void fold_column();
     void unfold_column();
     void fold_row();
     void unfold_row();
 
 	Node *headertop,*headerleft;
-	Node *left,*right;
-	Node *top,*down;
+    Node *right,*down;
 
     const Id &get_id() const;
     const Type &get_type() const;
 
 protected:
 	Node(const Id &id, Type type);
+
+    void insert_right(Node *node);
+    void insert_left(Node *node);
+    void insert_down(Node *node);
+    void insert_top(Node *node);
+
+	Node *left,*top;
 
 	const Id id;
     const Type type;

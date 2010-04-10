@@ -38,7 +38,7 @@ Node *Node::add_link(Node *move, Node *constraint, Node::Collector &collector, c
     return link;
 }
 
-Node::Node(const Id &id, Node::Type type) : headertop(this), headerleft(this), left(this), right(this), top(this), down(this), id(id), type(type) {}
+Node::Node(const Id &id, Node::Type type) : headertop(this), headerleft(this), right(this), down(this), left(this), top(this), id(id), type(type) {}
 
 const Node::Id &Node::get_id() const { return id; }
 const Node::Type &Node::get_type() const { return type; }
