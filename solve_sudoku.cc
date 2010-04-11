@@ -72,22 +72,6 @@ void play_number(Node *root,int i, int j, int k, SolveParams &params) {
     cout << endl;
 }
 
-void print_root_as_sukodu(const Node *root, std::ostream &os) {
-    int possible_count = 0;
-    for (Node *row=root->down; row!=root; row=row->down) { possible_count++; }
-    os << "root has " << possible_count << " possible moves" << endl;
-    for (Node *row=root->down; row!=root; row=row->down) {
-        os << *row << " -> ";
-        for (Node *element=row->right; element!=row; element=element->right) { os << *element->headertop << " "; }
-        os << endl;
-    }
-
-    int requirement_count = 0;
-    for (Node *column=root->right; column!=root; column=column->right) { requirement_count++; }
-    os << "root has " << requirement_count << " requirements" << endl;
-    for (Node *column=root->right; column!=root; column=column->right) { os << *column << endl; }
-}
-
 int main(int argc, char *argv[]) {
     Node::Collector collector;
     Node *root = build_structure(collector);
@@ -95,13 +79,13 @@ int main(int argc, char *argv[]) {
 
     //solving
     SolveParams params(root,1);
-    print_root_as_sukodu(root,cout);
+    print_root(root,cout,true);
     cout << "playing move" << endl;
     play_number(root,1,0,4,params);
     play_number(root,1,2,5,params);
-    print_root_as_sukodu(root,cout);
+    print_root(root,cout,true);
     cout << "looking for " << params.max_solution << " solution(s)" << endl;
-    solve(params,cout);
+    solve(params,cout,true);
     cout << "found " << params.solutions.size() << " solution(s)" << endl;
     for (SolveParams::Solutions::iterator isolution=params.solutions.begin(); isolution!=params.solutions.end(); isolution++) {
         assert(isolution->size() == 9);

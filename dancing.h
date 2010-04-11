@@ -37,6 +37,7 @@ protected:
     const Type type;
 };
 
+void print_root(const Node *root, std::ostream &os, bool verbose);
 std::ostream &operator<<(std::ostream &os,const Node &node);
 void delete_collector(Node::Collector &collector);
 
@@ -55,6 +56,6 @@ struct SolveParams {
     int indent;
 };
 
-void solve(SolveParams &params, std::ostream &log);
+void solve(SolveParams &params, std::ostream &log, bool verbose);
 
 #endif

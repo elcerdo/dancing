@@ -177,6 +177,24 @@ std::ostream &operator<<(std::ostream &os,const Node &node) {
     return os;
 }
 
+void print_root(const Node *root, std::ostream &os, bool verbose) {
+    assert(root->get_type() == Node::ROOT);
+
+    int possible_count = 0;
+    for (Node *row=root->down; row!=root; row=row->down) { possible_count++; }
+    os << "root has " << possible_count << " possible moves" << endl;
+    for (Node *row=root->down; row!=root and verbose; row=row->down) {
+        os << *row << " -> ";
+        for (Node *element=row->right; element!=row; element=element->right) { os << *element->headertop << " "; }
+        os << endl;
+    }
+
+    int requirement_count = 0;
+    for (Node *column=root->right; column!=root; column=column->right) { requirement_count++; }
+    os << "root has " << requirement_count << " requirements" << endl;
+    for (Node *column=root->right; column!=root and verbose; column=column->right) { os << *column << endl; }
+}
+
 
 SolveParams::SolveParams(Node *root,size_t max_solution) : root(root), max_solution(max_solution), indent(0) {}
 void SolveParams::print_indent(std::ostream &os) const {
@@ -202,31 +220,41 @@ static Node *find_minimum_column(Node *root) {
     return column_min;
 }
 
-void solve(SolveParams &params, std::ostream &log) {
+void solve(SolveParams &params, std::ostream &log, bool verbose) {
     Node *root = params.root;
-    //print_root(root,log);
+    assert(root->get_type() == Node::ROOT);
 
     if (root->right == root and root->down == root) {
-        params.print_indent(log);
-        log << "found solution ";
-        for (SolveParams::Solution::const_iterator i=params.partial_solution.begin(); i!=params.partial_solution.end(); i++) { log << **i << " "; }
-        log << endl;
         params.solutions.push_back(params.partial_solution);
+        if (verbose) {
+            params.print_indent(log);
+            log << "found solution ";
+            for (SolveParams::Solution::const_iterator i=params.partial_solution.begin(); i!=params.partial_solution.end(); i++) { log << **i << " "; }
+            log << endl;
+        }
+        log << (params.max_solution-params.solutions.size()) << " remaining" << endl;
         return;
     }
 
     Node *min_column = find_minimum_column(root);
     if (not min_column) {
-        params.print_indent(log);
-        log << "no min column" << endl;
+        if (verbose) {
+            params.print_indent(log);
+            log << "no min column" << endl;
+        }
         return;
     }
 
-    params.print_indent(log);
-    log << "min column is " << *min_column << endl;
-    for (Node *selected=min_column->down; selected!=min_column; selected=selected->down) {
+    if (verbose) {
         params.print_indent(log);
-        log << "selected row " << *selected->headerleft << endl;
+        log << "min column is " << *min_column << endl;
+    }
+
+    for (Node *selected=min_column->down; selected!=min_column; selected=selected->down) {
+        if (verbose) {
+            params.print_indent(log);
+            log << "selected row " << *selected->headerleft << endl;
+        }
 
         SolveParams::Nodes folded_columns;
         SolveParams::Nodes folded_rows;
@@ -245,7 +273,7 @@ void solve(SolveParams &params, std::ostream &log) {
         params.indent++;
         for (SolveParams::Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->fold_column(); }
         for (SolveParams::Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->fold_row(); }
-        solve(params,log);
+        solve(params,log,verbose);
         for (SolveParams::Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->unfold_column(); }
         for (SolveParams::Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->unfold_row(); }
         params.partial_solution.pop_back();
