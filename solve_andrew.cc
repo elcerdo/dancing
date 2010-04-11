@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cassert>
 #include <algorithm>
+#include <fstream>
 
 using std::cout;
 using std::endl;
@@ -234,16 +235,42 @@ int main(int argc, char *argv[]) {
     cout << "collector has " << collector.size() << " nodes" << endl;
 
     //solving
-    SolveParams params(root,1);
-    print_root_as_sukodu(root,cout);
+    SolveParams params(root,atoi(argv[1]));
+    //print_root_as_sukodu(root,cout);
     cout << "looking for " << params.max_solution << " solution(s)" << endl;
-    solve(params,cout);
+    std::ofstream fnull("/dev/null");
+    solve(params,fnull);
     cout << "found " << params.solutions.size() << " solution(s)" << endl;
+    int prout=0;
     for (SolveParams::Solutions::iterator isolution=params.solutions.begin(); isolution!=params.solutions.end(); isolution++) {
         assert(isolution->size() == WIDTH*HEIGHT);
-        cout << "solution=";
-        for (SolveParams::Solution::const_iterator i=isolution->begin(); i!=isolution->end(); i++) { cout << **i << endl; }
-        cout << endl;
+
+
+        printf("%d\n",prout++);
+        printf("  |  K  S  H  L\n");
+        printf("--+------------\n");
+        for (int i=0; i<HEIGHT; i++) {
+            printf("%2d|",i+1);
+            for (int j=0; j<WIDTH; j++) {
+                int coup;
+                for (SolveParams::Solution::const_iterator imove=isolution->begin(); imove!=isolution->end(); imove++) {
+                    Node *move = *imove;
+                    int im,jm;
+                    int ret = sscanf(move->get_id().c_str(),"%d in (%d,%d)",&coup,&im,&jm);
+                    assert(ret != EOF);
+                    if (im == i and jm == j) break;
+                }
+                printf(" %2d",coup);
+            }
+            printf("\n");
+        }
+        printf("\n");
+        //int coup,y,x;
+        //for (SolveParams::Solution::const_iterator i=isolution->begin(); i!=isolution->end(); i++) {
+        //    Node *move = *i;
+        //    int ret = sscanf(move->get_id().c_str(),"%d in (%d,%d)",&coup,&y,&x);
+        //    assert(ret != EOF);
+        //}
     }
 
     delete_collector(collector);
