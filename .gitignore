@@ -1,3 +1,4 @@
 *.o
 solve_array
 solve_sudoku
+solve_andrew
