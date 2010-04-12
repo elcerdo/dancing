@@ -101,24 +101,18 @@ Node *build_structure(Node::Collector &collector) {
 }
 
 void fill_cell(SolveParams &params,int i, int j, int k) {
-    int row_index = (i*WIDTH + j)*HEIGHT + k;
-    Node *row = params.root->top;
-    while (row!=params.root and row_index<(HEIGHT*WIDTH*HEIGHT)) {
-        row_index++;
-        row = row->top;
-    }
+    char id[256];
+    snprintf(id,256,"%d in (%d,%d)",k,i,j);
+    Node *move = Node::find_move(params.root,id);
 
-    params.play_move(row);
+    params.play_move(move);
 
-    cout << *row << " -> ";
-    for (Node *element=row->left; element!=row; element=element->left) { cout << *element->headertop << " "; }
-    cout << endl;
+    cout << *move << endl;
 }
 
 int main(int argc, char *argv[]) {
     // params
     int ngames = 10;
-    cout << argc;
     if (argc>1) {
         std::stringstream ss(argv[1]);
         int ngames_cache;
@@ -130,7 +124,7 @@ int main(int argc, char *argv[]) {
     Node::Collector collector;
     Node *root = build_structure(collector);
     cout << "collector has " << collector.size() << " nodes" << endl;
-    print_root(root,cout,false);
+    Node::print_root(root,cout,false);
 
     // playing move
     SolveParams params(root,ngames);
@@ -139,7 +133,7 @@ int main(int argc, char *argv[]) {
     fill_cell(params,0,1,9);
     fill_cell(params,0,2,4);
     fill_cell(params,0,3,2);
-    print_root(root,cout,false);
+    Node::print_root(root,cout,false);
 
     // solving
     cout << "looking for " << params.max_solution << " solution(s)" << endl;

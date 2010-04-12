@@ -13,6 +13,8 @@ struct Node {
     static Node *add_constraint(Node *root, Collector &collector,const Id &id);
     static Node *add_move(Node *root, Collector &collector, const Id &id);
     static Node *add_link(Node *move, Node *constraint, Collector &collector, const Id &id);
+    static void print_root(const Node *root, std::ostream &os, bool verbose);
+    static Node *find_move(Node *root,const Node::Id &id);
 
     void fold_column();
     void unfold_column();
@@ -39,7 +41,6 @@ protected:
     const Type type;
 };
 
-void print_root(const Node *root, std::ostream &os, bool verbose);
 std::ostream &operator<<(std::ostream &os,const Node &node);
 void delete_collector(Node::Collector &collector);
 

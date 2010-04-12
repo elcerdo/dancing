@@ -43,18 +43,11 @@ Node *build_structure(Node::Collector &collector) {
 }
 
 void play_sudoku_move(SolveParams &params,int i, int j, int k) {
-    int row_index = (i*3 + j)*9 + k;
-    Node *row = params.root->top;
-    while (row!=params.root and row_index<(3*3*9)) {
-        row_index++;
-        row = row->top;
-    }
-
+    char id[256];
+    snprintf(id,256,"%d in (%d,%d)",k,i,j);
+    Node *row = Node::find_move(params.root,id);
     params.play_move(row);
-
-    cout << *row << " -> ";
-    for (Node *element=row->left; element!=row; element=element->left) { cout << *element->headertop << " "; }
-    cout << endl;
+    cout << *row << endl;
 }
 
 int main(int argc, char *argv[]) {
@@ -64,13 +57,13 @@ int main(int argc, char *argv[]) {
 
     //solving
     SolveParams params(root,350);
-    print_root(root,cout,true);
+    Node::print_root(root,cout,true);
     cout << "playing move" << endl;
     play_sudoku_move(params,1,0,4);
     play_sudoku_move(params,1,2,5);
     play_sudoku_move(params,0,0,1);
     play_sudoku_move(params,0,1,2);
-    print_root(root,cout,true);
+    Node::print_root(root,cout,true);
     cout << "looking for " << params.max_solution << " solution(s)" << endl;
     params.solve(cout,true);
     cout << "found " << params.solutions.size() << " solution(s)" << endl;

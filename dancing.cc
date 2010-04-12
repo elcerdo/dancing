@@ -38,6 +38,33 @@ Node *Node::add_link(Node *move, Node *constraint, Node::Collector &collector, c
     return link;
 }
 
+Node *Node::find_move(Node *root,const Node::Id &id) {
+    assert(root->get_type() == Node::ROOT);
+
+    Node *row = root->top;
+    while (row!=root and row->get_id() != id) { row = row->top; }
+    if (row == root) return NULL;
+    return row;
+}
+
+void Node::print_root(const Node *root, std::ostream &os, bool verbose) {
+    assert(root->get_type() == Node::ROOT);
+
+    int possible_count = 0;
+    for (Node *row=root->down; row!=root; row=row->down) { possible_count++; }
+    os << "root has " << possible_count << " possible moves" << endl;
+    for (Node *row=root->down; row!=root and verbose; row=row->down) {
+        os << *row << " -> ";
+        for (Node *element=row->right; element!=row; element=element->right) { os << *element->headertop << " "; }
+        os << endl;
+    }
+
+    int requirement_count = 0;
+    for (Node *column=root->right; column!=root; column=column->right) { requirement_count++; }
+    os << "root has " << requirement_count << " requirements" << endl;
+    for (Node *column=root->right; column!=root and verbose; column=column->right) { os << *column << endl; }
+}
+
 Node::Node(const Id &id, Node::Type type) : headertop(this), headerleft(this), right(this), down(this), left(this), top(this), id(id), type(type) {}
 
 const Node::Id &Node::get_id() const { return id; }
@@ -176,25 +203,6 @@ std::ostream &operator<<(std::ostream &os,const Node &node) {
     //os << " down=" << (node.down==&node ? "self" : node.down->get_id());
     return os;
 }
-
-void print_root(const Node *root, std::ostream &os, bool verbose) {
-    assert(root->get_type() == Node::ROOT);
-
-    int possible_count = 0;
-    for (Node *row=root->down; row!=root; row=row->down) { possible_count++; }
-    os << "root has " << possible_count << " possible moves" << endl;
-    for (Node *row=root->down; row!=root and verbose; row=row->down) {
-        os << *row << " -> ";
-        for (Node *element=row->right; element!=row; element=element->right) { os << *element->headertop << " "; }
-        os << endl;
-    }
-
-    int requirement_count = 0;
-    for (Node *column=root->right; column!=root; column=column->right) { requirement_count++; }
-    os << "root has " << requirement_count << " requirements" << endl;
-    for (Node *column=root->right; column!=root and verbose; column=column->right) { os << *column << endl; }
-}
-
 
 SolveParams::SolveParams(Node *root,size_t max_solution) : root(root), max_solution(max_solution), indent(0) {
     assert(root->get_type() == Node::ROOT);
