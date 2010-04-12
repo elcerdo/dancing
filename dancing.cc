@@ -177,8 +177,29 @@ std::ostream &operator<<(std::ostream &os,const Node &node) {
     return os;
 }
 
+void print_root(const Node *root, std::ostream &os, bool verbose) {
+    assert(root->get_type() == Node::ROOT);
 
-SolveParams::SolveParams(Node *root,size_t max_solution) : root(root), max_solution(max_solution), indent(0) {}
+    int possible_count = 0;
+    for (Node *row=root->down; row!=root; row=row->down) { possible_count++; }
+    os << "root has " << possible_count << " possible moves" << endl;
+    for (Node *row=root->down; row!=root and verbose; row=row->down) {
+        os << *row << " -> ";
+        for (Node *element=row->right; element!=row; element=element->right) { os << *element->headertop << " "; }
+        os << endl;
+    }
+
+    int requirement_count = 0;
+    for (Node *column=root->right; column!=root; column=column->right) { requirement_count++; }
+    os << "root has " << requirement_count << " requirements" << endl;
+    for (Node *column=root->right; column!=root and verbose; column=column->right) { os << *column << endl; }
+}
+
+
+SolveParams::SolveParams(Node *root,size_t max_solution) : root(root), max_solution(max_solution), indent(0) {
+    assert(root->get_type() == Node::ROOT);
+}
+
 void SolveParams::print_indent(std::ostream &os) const {
     for (int k=0; k<indent; k++) { os << "-"; };
 }
@@ -202,31 +223,40 @@ static Node *find_minimum_column(Node *root) {
     return column_min;
 }
 
-void solve(SolveParams &params, std::ostream &log) {
-    Node *root = params.root;
-    //print_root(root,log);
+void SolveParams::solve(std::ostream &log, bool verbose) {
+    assert(root->get_type() == Node::ROOT);
 
     if (root->right == root and root->down == root) {
-        params.print_indent(log);
-        log << "found solution ";
-        for (SolveParams::Solution::const_iterator i=params.partial_solution.begin(); i!=params.partial_solution.end(); i++) { log << **i << " "; }
-        log << endl;
-        params.solutions.push_back(params.partial_solution);
+        solutions.push_back(partial_solution);
+        if (verbose) {
+            print_indent(log);
+            log << "found solution ";
+            for (SolveParams::Solution::const_iterator i=partial_solution.begin(); i!=partial_solution.end(); i++) { log << **i << " "; }
+            log << endl;
+        }
+        log << (max_solution-solutions.size()) << " remaining" << endl;
         return;
     }
 
     Node *min_column = find_minimum_column(root);
     if (not min_column) {
-        params.print_indent(log);
-        log << "no min column" << endl;
+        if (verbose) {
+            print_indent(log);
+            log << "no min column" << endl;
+        }
         return;
     }
 
-    params.print_indent(log);
-    log << "min column is " << *min_column << endl;
+    if (verbose) {
+        print_indent(log);
+        log << "min column is " << *min_column << endl;
+    }
+
     for (Node *selected=min_column->down; selected!=min_column; selected=selected->down) {
-        params.print_indent(log);
-        log << "selected row " << *selected->headerleft << endl;
+        if (verbose) {
+            print_indent(log);
+            log << "selected row " << *selected->headerleft << endl;
+        }
 
         SolveParams::Nodes folded_columns;
         SolveParams::Nodes folded_rows;
@@ -241,18 +271,39 @@ void solve(SolveParams &params, std::ostream &log) {
 
         }
 
-        params.partial_solution.push_back(selected->headerleft);
-        params.indent++;
+        partial_solution.push_back(selected->headerleft);
+        indent++;
         for (SolveParams::Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->fold_column(); }
         for (SolveParams::Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->fold_row(); }
-        solve(params,log);
+        solve(log,verbose);
         for (SolveParams::Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->unfold_column(); }
         for (SolveParams::Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->unfold_row(); }
-        params.partial_solution.pop_back();
-        params.indent--;
+        partial_solution.pop_back();
+        indent--;
 
-        if (params.solutions.size() >= params.max_solution) return;
+        if (solutions.size() >= max_solution) return;
     }
+}
+
+void SolveParams::play_move(Node *move) {
+    assert(move->get_type() == Node::MOVE);
+
+    SolveParams::Nodes folded_columns;
+    SolveParams::Nodes folded_rows;
+    for (Node *element_row=move->right; element_row!=move; element_row=element_row->right) {
+        Node *column = element_row->headertop;
+        folded_columns.push_back(column);
+        for (Node *element_column=column->down; element_column!=column; element_column=element_column->down) {
+            Node *aarow = element_column->headerleft;
+            bool row_foldable = (std::find(folded_rows.begin(),folded_rows.end(),aarow) == folded_rows.end());
+            if (row_foldable) folded_rows.push_back(aarow);
+        }
+
+    }
+
+    partial_solution.push_back(move);
+    for (SolveParams::Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->fold_column(); }
+    for (SolveParams::Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->fold_row(); }
 }
 
 void delete_collector(Node::Collector &collector) {
