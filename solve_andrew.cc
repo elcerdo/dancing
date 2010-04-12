@@ -129,10 +129,10 @@ int main(int argc, char *argv[]) {
     // playing move
     SolveParams params(root,ngames);
     cout << "filling cells" << endl;
-    fill_cell(params,0,0,5);
-    fill_cell(params,0,1,9);
-    fill_cell(params,0,2,4);
-    fill_cell(params,0,3,2);
+    //fill_cell(params,0,0,5);
+    //fill_cell(params,0,1,9);
+    //fill_cell(params,0,2,4);
+    //fill_cell(params,0,3,2);
     Node::print_root(root,cout,false);
 
     // solving
