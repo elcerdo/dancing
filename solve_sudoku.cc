@@ -78,11 +78,13 @@ int main(int argc, char *argv[]) {
     cout << "collector has " << collector.size() << " nodes" << endl;
 
     //solving
-    SolveParams params(root,1);
+    SolveParams params(root,350);
     print_root(root,cout,true);
     cout << "playing move" << endl;
     play_number(root,1,0,4,params);
     play_number(root,1,2,5,params);
+    play_number(root,0,0,1,params);
+    play_number(root,0,1,2,params);
     print_root(root,cout,true);
     cout << "looking for " << params.max_solution << " solution(s)" << endl;
     solve(params,cout,true);

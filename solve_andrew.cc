@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <cassert>
 #include <algorithm>
-#include <fstream>
+#include <sstream>
 
 using std::cout;
 using std::endl;
@@ -101,6 +101,15 @@ Node *build_structure(Node::Collector &collector) {
 }
 
 int main(int argc, char *argv[]) {
+    // params
+    int ngames = 10;
+    cout << argc;
+    if (argc>1) {
+        std::stringstream ss(argv[1]);
+        int ngames_cache;
+        ss >> ngames_cache;
+        if (not ss.fail()) { ngames = ngames_cache; }
+    }
     // init stuff
     Node::Collector collector;
     Node *root = build_structure(collector);
@@ -108,7 +117,7 @@ int main(int argc, char *argv[]) {
     print_root(root,cout,false);
 
     // solving
-    SolveParams params(root,3);
+    SolveParams params(root,ngames);
     cout << "looking for " << params.max_solution << " solution(s)" << endl;
     solve(params,cout,false);
     cout << "found " << params.solutions.size() << " solution(s)" << endl;

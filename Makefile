@@ -1,7 +1,7 @@
 CXX=g++
 CC=g++
-CXXFLAGS=-g -Wall
-LDFLAGS=-g -lefence
+CXXFLAGS=-O2 -g -Wall
+LDFLAGS=-O2 -g
 
 all: solve_array solve_sudoku solve_andrew
 
