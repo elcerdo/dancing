@@ -47,15 +47,20 @@ struct SolveParams {
     typedef std::list<Nodes> Solutions;
 
     SolveParams(Node *root,size_t max_solution);
-    void print_indent(std::ostream &os) const;
+    void solve(std::ostream &log, bool verbose);
+    void play_move(Node *move);
 
     Node *root;
-    Solution partial_solution;
     Solutions solutions;
     const size_t max_solution;
+
+protected:
+    void print_indent(std::ostream &os) const;
+
+    Solution partial_solution;
     int indent;
 };
 
-void solve(SolveParams &params, std::ostream &log, bool verbose);
+
 
 #endif

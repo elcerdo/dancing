@@ -42,30 +42,15 @@ Node *build_structure(Node::Collector &collector) {
     return root;
 }
 
-void play_number(Node *root,int i, int j, int k, SolveParams &params) {
+void play_sudoku_move(SolveParams &params,int i, int j, int k) {
     int row_index = (i*3 + j)*9 + k;
-    Node *row = root->top;
-    while (row!=root and row_index<(3*3*9)) {
+    Node *row = params.root->top;
+    while (row!=params.root and row_index<(3*3*9)) {
         row_index++;
         row = row->top;
     }
 
-    SolveParams::Nodes folded_columns;
-    SolveParams::Nodes folded_rows;
-    for (Node *element_row=row->right; element_row!=row; element_row=element_row->right) {
-        Node *column = element_row->headertop;
-        folded_columns.push_back(column);
-        for (Node *element_column=column->down; element_column!=column; element_column=element_column->down) {
-            Node *aarow = element_column->headerleft;
-            bool row_foldable = (std::find(folded_rows.begin(),folded_rows.end(),aarow) == folded_rows.end());
-            if (row_foldable) folded_rows.push_back(aarow);
-        }
-
-    }
-
-    params.partial_solution.push_back(row);
-    for (SolveParams::Nodes::iterator i=folded_columns.begin(); i!=folded_columns.end(); i++) { (*i)->fold_column(); }
-    for (SolveParams::Nodes::iterator i=folded_rows.begin(); i!=folded_rows.end(); i++) { (*i)->fold_row(); }
+    params.play_move(row);
 
     cout << *row << " -> ";
     for (Node *element=row->left; element!=row; element=element->left) { cout << *element->headertop << " "; }
@@ -81,13 +66,13 @@ int main(int argc, char *argv[]) {
     SolveParams params(root,350);
     print_root(root,cout,true);
     cout << "playing move" << endl;
-    play_number(root,1,0,4,params);
-    play_number(root,1,2,5,params);
-    play_number(root,0,0,1,params);
-    play_number(root,0,1,2,params);
+    play_sudoku_move(params,1,0,4);
+    play_sudoku_move(params,1,2,5);
+    play_sudoku_move(params,0,0,1);
+    play_sudoku_move(params,0,1,2);
     print_root(root,cout,true);
     cout << "looking for " << params.max_solution << " solution(s)" << endl;
-    solve(params,cout,true);
+    params.solve(cout,true);
     cout << "found " << params.solutions.size() << " solution(s)" << endl;
     for (SolveParams::Solutions::iterator isolution=params.solutions.begin(); isolution!=params.solutions.end(); isolution++) {
         assert(isolution->size() == 9);

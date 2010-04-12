@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
     //solving
     SolveParams params(root,23);
     cout << "looking for " << params.max_solution << " solution(s)" << endl;
-    solve(params,cout,true);
+    params.solve(cout,true);
     cout << "found " << params.solutions.size() << " solution(s)" << endl;
     for (SolveParams::Solutions::iterator isolution=params.solutions.begin(); isolution!=params.solutions.end(); isolution++) {
         cout << "solution=";
