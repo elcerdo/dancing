@@ -15,6 +15,8 @@ struct Node {
     static Node *add_link(Node *move, Node *constraint, Collector &collector, const Id &id);
     static void print_root(const Node *root, std::ostream &os, bool verbose);
     static Node *find_move(Node *root,const Node::Id &id);
+	static int get_number_of_moves(const Node *root);
+	static int get_number_of_constraints(const Node *root);
 
     void fold_column();
     void unfold_column();

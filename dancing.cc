@@ -47,11 +47,26 @@ Node *Node::find_move(Node *root,const Node::Id &id) {
     return row;
 }
 
+int Node::get_number_of_moves(const Node *root) {
+    assert(root->get_type() == Node::ROOT);
+
+	int count = 0;
+    for (Node *row=root->down; row!=root; row=row->down) { count++; }
+	return count;
+}
+
+int Node::get_number_of_constraints(const Node *root) {
+    assert(root->get_type() == Node::ROOT);
+	
+	int count = 0;
+    for (Node *column=root->right; column!=root; column=column->right) { count++; }
+	return count;
+}
+
 void Node::print_root(const Node *root, std::ostream &os, bool verbose) {
     assert(root->get_type() == Node::ROOT);
 
-    int possible_count = 0;
-    for (Node *row=root->down; row!=root; row=row->down) { possible_count++; }
+    int possible_count = get_number_of_moves(root);
     os << "root has " << possible_count << " possible moves" << endl;
     for (Node *row=root->down; row!=root and verbose; row=row->down) {
         os << *row << " -> ";
@@ -59,8 +74,7 @@ void Node::print_root(const Node *root, std::ostream &os, bool verbose) {
         os << endl;
     }
 
-    int requirement_count = 0;
-    for (Node *column=root->right; column!=root; column=column->right) { requirement_count++; }
+    int requirement_count = get_number_of_constraints(root);
     os << "root has " << requirement_count << " requirements" << endl;
     for (Node *column=root->right; column!=root and verbose; column=column->right) { os << *column << endl; }
 }

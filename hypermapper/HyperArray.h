@@ -2,6 +2,8 @@
 #define __HYPERARRAY_H__
 
 #include <pthread.h>
+#include <map>
+#include <vector>
 
 class HyperArray {
 public:
@@ -9,21 +11,37 @@ public:
 	static const int WIDTH  = 4;
 	HyperArray();
 	HyperArray(const HyperArray &orig);
-	int get_value(int row, const char *column);
+
+	int get_value(int row, int column) const;
+	int get_value(int row, const char *column) const;
+	
+	bool set_value(int row, int column, int value);
 	bool set_value(int row, const char *column, int value);
+	
+	bool unset_value(int row, int column);
+	bool unset_value(int row, const char *column);
+	
+	typedef std::pair<int,int> Coord;
+	typedef std::map<Coord,int> Data;
+	typedef std::vector<Data> Solutions;
+	
+	Solutions solutions;
 protected:
-	int data[HEIGHT][WIDTH];
+	Data data;
 };
 
-struct HyperThreadParams {
+class HyperThreadParams {
+public:
 	HyperThreadParams(const HyperArray &array);
 	~HyperThreadParams();
 	bool is_finished();
-	const HyperArray array;
+	const int constraints, moves;
+	HyperArray local_array;
 protected:
 	static void *loop(void *);
 	pthread_t thread;
 	bool finished;
+
 	pthread_mutex_t finished_mutex;
 };
 

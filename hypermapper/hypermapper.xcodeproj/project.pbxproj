@@ -13,6 +13,7 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		B12BE4F511746214000FECCE /* Controller.mm in Sources */ = {isa = PBXBuildFile; fileRef = B12BE4F411746214000FECCE /* Controller.mm */; };
 		B12BE5C111747D2F000FECCE /* HyperArray.cc in Sources */ = {isa = PBXBuildFile; fileRef = B12BE5C011747D2F000FECCE /* HyperArray.cc */; };
+		B13998431174CB0700A5A300 /* andrew.cc in Sources */ = {isa = PBXBuildFile; fileRef = B13998411174CB0700A5A300 /* andrew.cc */; };
 		B18B9AC81174C71500CF5123 /* array.cc in Sources */ = {isa = PBXBuildFile; fileRef = B18B9AC41174C71500CF5123 /* array.cc */; };
 		B18B9AC91174C71500CF5123 /* dancing.cc in Sources */ = {isa = PBXBuildFile; fileRef = B18B9AC61174C71500CF5123 /* dancing.cc */; };
 /* End PBXBuildFile section */
@@ -32,6 +33,8 @@
 		B12BE4F411746214000FECCE /* Controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Controller.mm; sourceTree = "<group>"; };
 		B12BE5BF11747D2F000FECCE /* HyperArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperArray.h; sourceTree = "<group>"; };
 		B12BE5C011747D2F000FECCE /* HyperArray.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HyperArray.cc; sourceTree = "<group>"; };
+		B13998411174CB0700A5A300 /* andrew.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = andrew.cc; path = ../andrew.cc; sourceTree = SOURCE_ROOT; };
+		B13998421174CB0700A5A300 /* andrew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = andrew.h; path = ../andrew.h; sourceTree = SOURCE_ROOT; };
 		B18B9AC41174C71500CF5123 /* array.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = array.cc; path = ../array.cc; sourceTree = SOURCE_ROOT; };
 		B18B9AC51174C71500CF5123 /* array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = array.h; path = ../array.h; sourceTree = SOURCE_ROOT; };
 		B18B9AC61174C71500CF5123 /* dancing.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dancing.cc; path = ../dancing.cc; sourceTree = SOURCE_ROOT; };
@@ -53,6 +56,8 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				B13998411174CB0700A5A300 /* andrew.cc */,
+				B13998421174CB0700A5A300 /* andrew.h */,
 				B18B9AC41174C71500CF5123 /* array.cc */,
 				B18B9AC51174C71500CF5123 /* array.h */,
 				B18B9AC61174C71500CF5123 /* dancing.cc */,
@@ -191,6 +196,7 @@
 				B12BE5C111747D2F000FECCE /* HyperArray.cc in Sources */,
 				B18B9AC81174C71500CF5123 /* array.cc in Sources */,
 				B18B9AC91174C71500CF5123 /* dancing.cc in Sources */,
+				B13998431174CB0700A5A300 /* andrew.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
