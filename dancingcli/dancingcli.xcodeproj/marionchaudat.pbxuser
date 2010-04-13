@@ -12,6 +12,20 @@
 			B141766E117458AB008F8E01 /* dancingcli */,
 		);
 		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXErrorsWarningsDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXErrorsWarningsDataSource_LocationID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					300,
+					723,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXErrorsWarningsDataSource_TypeID,
+					PBXErrorsWarningsDataSource_MessageID,
+					PBXErrorsWarningsDataSource_LocationID,
+				);
+			};
 			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
 				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
@@ -72,14 +86,14 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 292837765;
-			PBXWorkspaceStateSaveDate = 292837765;
+			PBXPerProjectTemplateStateSaveDate = 292866535;
+			PBXWorkspaceStateSaveDate = 292866535;
 		};
 		perUserProjectItems = {
+			B112DE5B1174CA2700FD7899 /* PBXTextBookmark */ = B112DE5B1174CA2700FD7899 /* PBXTextBookmark */;
 			B1C0913111745ADD00E2D3B3 /* PBXTextBookmark */ = B1C0913111745ADD00E2D3B3 /* PBXTextBookmark */;
 			B1C0913211745ADD00E2D3B3 /* PBXTextBookmark */ = B1C0913211745ADD00E2D3B3 /* PBXTextBookmark */;
 			B1C0913311745ADD00E2D3B3 /* PBXTextBookmark */ = B1C0913311745ADD00E2D3B3 /* PBXTextBookmark */;
-			B1C0913411745ADD00E2D3B3 /* PBXTextBookmark */ = B1C0913411745ADD00E2D3B3 /* PBXTextBookmark */;
 			B1C0913511745ADD00E2D3B3 /* PBXTextBookmark */ = B1C0913511745ADD00E2D3B3 /* PBXTextBookmark */;
 			B1C0913611745ADD00E2D3B3 /* PBXTextBookmark */ = B1C0913611745ADD00E2D3B3 /* PBXTextBookmark */;
 			B1C0913711745ADD00E2D3B3 /* PBXTextBookmark */ = B1C0913711745ADD00E2D3B3 /* PBXTextBookmark */;
@@ -94,6 +108,16 @@
 		executables = (
 			B141766E117458AB008F8E01 /* dancingcli */,
 		);
+	};
+	B112DE5B1174CA2700FD7899 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = B1C0911311745A1000E2D3B3 /* array.h */;
+		name = "array.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 399;
+		vrLoc = 0;
 	};
 	B141766E117458AB008F8E01 /* dancingcli */ = {
 		isa = PBXExecutable;
@@ -187,16 +211,6 @@
 		rType = 0;
 		vrLen = 863;
 		vrLoc = 2365;
-	};
-	B1C0913411745ADD00E2D3B3 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = B1C0911311745A1000E2D3B3 /* array.h */;
-		name = "array.h: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 399;
-		vrLoc = 0;
 	};
 	B1C0913511745ADD00E2D3B3 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
