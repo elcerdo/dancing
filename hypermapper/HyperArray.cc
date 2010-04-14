@@ -14,17 +14,31 @@ HyperArray::HyperArray(const HyperArray &orig) {
 	solutions = Solutions(orig.solutions);
 }	
 
-int HyperArray::get_value(int row, const char *column) const {
+int HyperArray::get_value(int row, const char *column, int solution) const {
 	std::string stdcolumn(column);
 	if (stdcolumn == "from")  return row+1;
-	if (stdcolumn == "kick")  return get_value(row,0);
-	if (stdcolumn == "snare") return get_value(row,1);
-	if (stdcolumn == "high")  return get_value(row,2);
-	if (stdcolumn == "low")   return get_value(row,3);
+	if (stdcolumn == "kick_input")  return get_value_input(row,0);
+	if (stdcolumn == "snare_input") return get_value_input(row,1);
+	if (stdcolumn == "high_input")  return get_value_input(row,2);
+	if (stdcolumn == "low_input")   return get_value_input(row,3);
+	if (stdcolumn == "kick_output")  return get_value_output(row,0,solution);
+	if (stdcolumn == "snare_output") return get_value_output(row,1,solution);
+	if (stdcolumn == "high_output")  return get_value_output(row,2,solution);
+	if (stdcolumn == "low_output")   return get_value_output(row,3,solution);
 	return 0;
 }
 
-int HyperArray::get_value(int i, int j) const {
+int HyperArray::get_value_output(int i, int j, int s) const {
+	assert(i>=0 and i<HEIGHT and j>=0 and j<WIDTH);
+	if (s<0 or s>=solutions.size()) return 0;
+	const Data &solution = solutions[s];
+	Coord coord = std::make_pair(i,j);
+	Data::const_iterator value = solution.find(coord);
+	assert(value != solution.end());
+	return value->second;
+}
+	
+int HyperArray::get_value_input(int i, int j) const {
 	assert(i>=0 and i<HEIGHT and j>=0 and j<WIDTH);
 	Coord coord = std::make_pair(i,j);
 	Data::const_iterator value = data.find(coord);
@@ -33,16 +47,15 @@ int HyperArray::get_value(int i, int j) const {
 }
 
 bool HyperArray::set_value(int row, const char *column, int value) {
-
 	std::string stdcolumn(column);
-	if (stdcolumn == "kick")  { return set_value(row,0,value); }
-	if (stdcolumn == "snare") { return set_value(row,1,value); }
-	if (stdcolumn == "high")  { return set_value(row,2,value); }
-	if (stdcolumn == "low")   { return set_value(row,3,value); }
+	if (stdcolumn == "kick_input")  { return set_value_input(row,0,value); }
+	if (stdcolumn == "snare_input") { return set_value_input(row,1,value); }
+	if (stdcolumn == "high_input")  { return set_value_input(row,2,value); }
+	if (stdcolumn == "low_input")   { return set_value_input(row,3,value); }
 	return false;
 }
 
-bool HyperArray::set_value(int i, int j, int value) {
+bool HyperArray::set_value_input(int i, int j, int value) {
 	if (value<1 or value>16) return false;
 	assert(i>=0 and i<HEIGHT and j>=0 and j<WIDTH);
 	Coord coord = std::make_pair(i,j);
@@ -52,14 +65,14 @@ bool HyperArray::set_value(int i, int j, int value) {
 
 bool HyperArray::unset_value(int row,const char *column) {
 	std::string stdcolumn(column);
-	if (stdcolumn == "kick")  { return unset_value(row,0); }
-	if (stdcolumn == "snare") { return unset_value(row,1); }
-	if (stdcolumn == "high")  { return unset_value(row,2); }
-	if (stdcolumn == "low")   { return unset_value(row,3); }
+	if (stdcolumn == "kick_input")  { return unset_value_input(row,0); }
+	if (stdcolumn == "snare_input") { return unset_value_input(row,1); }
+	if (stdcolumn == "high_input")  { return unset_value_input(row,2); }
+	if (stdcolumn == "low_input")   { return unset_value_input(row,3); }
 	return false;
 }
 
-bool HyperArray::unset_value(int i, int j) {
+bool HyperArray::unset_value_input(int i, int j) {
 	assert(i>=0 and i<HEIGHT and j>=0 and j<WIDTH);
 	Coord coord = std::make_pair(i,j);
 	data.erase(coord);
@@ -94,10 +107,11 @@ void *HyperThreadParams::loop(void *arg) {
 	cout.flush();
 	
     // playing move
-    SolveParams params(root,10);
+    SolveParams params(root,20);
     cout << "filling cells" << endl;
-	for (int i=0; i<HEIGHT; i++) for (int j=0; j<WIDTH; j++) if (self->local_array.get_value(i,j)) {
-		fill_cell(params,i,j,self->local_array.get_value(i,j));
+	for (int i=0; i<HEIGHT; i++) for (int j=0; j<WIDTH; j++) {
+		int value = self->local_array.get_value_input(i,j); 
+		if (value) { fill_cell(params,i,j,value); }
 	}
     Node::print_root(root,cout,false);
 	cout.flush();

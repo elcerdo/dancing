@@ -12,13 +12,14 @@ public:
 	HyperArray();
 	HyperArray(const HyperArray &orig);
 
-	int get_value(int row, int column) const;
-	int get_value(int row, const char *column) const;
+	int get_value_input(int row, int column) const;
+	int get_value_output(int row, int column, int solution) const;
+	int get_value(int row, const char *column, int solution) const;
 	
-	bool set_value(int row, int column, int value);
+	bool set_value_input(int row, int column, int value);
 	bool set_value(int row, const char *column, int value);
 	
-	bool unset_value(int row, int column);
+	bool unset_value_input(int row, int column);
 	bool unset_value(int row, const char *column);
 	
 	typedef std::pair<int,int> Coord;
