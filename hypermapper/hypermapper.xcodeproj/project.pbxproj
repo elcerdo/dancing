@@ -14,6 +14,7 @@
 		B12BE4F511746214000FECCE /* Controller.mm in Sources */ = {isa = PBXBuildFile; fileRef = B12BE4F411746214000FECCE /* Controller.mm */; };
 		B12BE5C111747D2F000FECCE /* HyperArray.cc in Sources */ = {isa = PBXBuildFile; fileRef = B12BE5C011747D2F000FECCE /* HyperArray.cc */; };
 		B13998431174CB0700A5A300 /* andrew.cc in Sources */ = {isa = PBXBuildFile; fileRef = B13998411174CB0700A5A300 /* andrew.cc */; };
+		B14B0FAE11774B6A0036130E /* culcube.icns in Resources */ = {isa = PBXBuildFile; fileRef = B14B0FAD11774B6A0036130E /* culcube.icns */; };
 		B18B9AC81174C71500CF5123 /* array.cc in Sources */ = {isa = PBXBuildFile; fileRef = B18B9AC41174C71500CF5123 /* array.cc */; };
 		B18B9AC91174C71500CF5123 /* dancing.cc in Sources */ = {isa = PBXBuildFile; fileRef = B18B9AC61174C71500CF5123 /* dancing.cc */; };
 /* End PBXBuildFile section */
@@ -35,6 +36,7 @@
 		B12BE5C011747D2F000FECCE /* HyperArray.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HyperArray.cc; sourceTree = "<group>"; };
 		B13998411174CB0700A5A300 /* andrew.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = andrew.cc; path = ../andrew.cc; sourceTree = SOURCE_ROOT; };
 		B13998421174CB0700A5A300 /* andrew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = andrew.h; path = ../andrew.h; sourceTree = SOURCE_ROOT; };
+		B14B0FAD11774B6A0036130E /* culcube.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = culcube.icns; sourceTree = "<group>"; };
 		B18B9AC41174C71500CF5123 /* array.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = array.cc; path = ../array.cc; sourceTree = SOURCE_ROOT; };
 		B18B9AC51174C71500CF5123 /* array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = array.h; path = ../array.h; sourceTree = SOURCE_ROOT; };
 		B18B9AC61174C71500CF5123 /* dancing.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dancing.cc; path = ../dancing.cc; sourceTree = SOURCE_ROOT; };
@@ -120,6 +122,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B14B0FAD11774B6A0036130E /* culcube.icns */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
@@ -181,6 +184,7 @@
 			files = (
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
+				B14B0FAE11774B6A0036130E /* culcube.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
