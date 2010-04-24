@@ -228,8 +228,6 @@
 			<key>Layout</key>
 			<array>
 				<dict>
-					<key>BecomeActive</key>
-					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -277,8 +275,8 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>2</integer>
-									<integer>1</integer>
+									<integer>15</integer>
+									<integer>10</integer>
 									<integer>0</integer>
 								</array>
 							</array>
@@ -313,12 +311,14 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>andrew.cc</string>
+								<string>HyperArray.cc</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -326,11 +326,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>andrew.cc</string>
+										<string>HyperArray.cc</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>B102DE781177502C0031B765</string>
+										<string>B1DEA39111833EBE00794F7D</string>
 										<key>history</key>
 										<array>
 											<string>B12BE57B117478B2000FECCE</string>
@@ -340,14 +340,14 @@
 											<string>B139987E1174D4A200A5A300</string>
 											<string>B139987F1174D4A200A5A300</string>
 											<string>B13998C91174D7D200A5A300</string>
-											<string>B14CE0701175B58B00165330</string>
-											<string>B14CE08E1175B81C00165330</string>
-											<string>B19873591177418D00A3BC3D</string>
-											<string>B14B0FB011774B880036130E</string>
 											<string>B14B0FB111774B880036130E</string>
 											<string>B147504711774CDB00E6EA14</string>
 											<string>B102DE6C1177502C0031B765</string>
-											<string>B139987C1174D4A200A5A300</string>
+											<string>B1DEA30B1183320E00794F7D</string>
+											<string>B1DEA33D118333DC00794F7D</string>
+											<string>B1DEA35A118339D200794F7D</string>
+											<string>B1DEA35B118339D200794F7D</string>
+											<string>B1DEA35C118339D200794F7D</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -366,7 +366,29 @@
 											<string>B13998921174D4A200A5A300</string>
 											<string>B13998D51174D7D200A5A300</string>
 											<string>B14B0FB311774B880036130E</string>
-											<string>B102DE6D1177502C0031B765</string>
+											<string>B1DEA3101183320E00794F7D</string>
+											<string>B1DEA3111183320E00794F7D</string>
+											<string>B1DEA3121183320E00794F7D</string>
+											<string>B1DEA3131183320E00794F7D</string>
+											<string>B1DEA3141183320E00794F7D</string>
+											<string>B1DEA3151183320E00794F7D</string>
+											<string>B1DEA3161183320E00794F7D</string>
+											<string>B1DEA3171183320E00794F7D</string>
+											<string>B1DEA3181183320E00794F7D</string>
+											<string>B1DEA3191183320E00794F7D</string>
+											<string>B1DEA31A1183320E00794F7D</string>
+											<string>B1DEA31B1183320E00794F7D</string>
+											<string>B1DEA31C1183320E00794F7D</string>
+											<string>B1DEA33F118333DC00794F7D</string>
+											<string>B1DEA340118333DC00794F7D</string>
+											<string>B1DEA341118333DC00794F7D</string>
+											<string>B1DEA344118334EA00794F7D</string>
+											<string>B1DEA3551183379B00794F7D</string>
+											<string>B1DEA35D118339D200794F7D</string>
+											<string>B1DEA35E118339D200794F7D</string>
+											<string>B1DEA35F118339D200794F7D</string>
+											<string>B1DEA360118339D200794F7D</string>
+											<string>B1DEA361118339D200794F7D</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -424,9 +446,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>B102DE6F1177502C0031B765</string>
+				<string>B1DEA31E1183320E00794F7D</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>B102DE701177502C0031B765</string>
+				<string>B1DEA31F1183320E00794F7D</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -560,8 +582,11 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>B12BE4E8117461DF000FECCE</string>
+		<string>B1DEA32B1183322400794F7D</string>
+		<string>B1DEA32C1183322400794F7D</string>
+		<string>1C78EAAD065D492600B07095</string>
 		<string>1CD10A99069EF8BA00B06720</string>
+		<string>B12BE4E8117461DF000FECCE</string>
 		<string>/Volumes/Autre/pierre/dancing/hypermapper/hypermapper.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
@@ -642,7 +667,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>B12BE4E8117461DF000FECCE</string>
-				<string>B102DE711177502C0031B765</string>
+				<string>B1DEA3201183320E00794F7D</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -762,13 +787,13 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>B102DE721177502C0031B765</string>
+				<string>B1DEA3211183320E00794F7D</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>B102DE731177502C0031B765</string>
-				<string>B102DE741177502C0031B765</string>
-				<string>B102DE751177502C0031B765</string>
-				<string>B102DE761177502C0031B765</string>
-				<string>B102DE771177502C0031B765</string>
+				<string>B1DEA3221183320E00794F7D</string>
+				<string>B1DEA3231183320E00794F7D</string>
+				<string>B1DEA3241183320E00794F7D</string>
+				<string>B1DEA3251183320E00794F7D</string>
+				<string>B1DEA3261183320E00794F7D</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
@@ -895,6 +920,8 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -930,7 +957,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C78EAAD065D492600B07095</string>
-				<string>B147505511774CDB00E6EA14</string>
+				<string>B1DEA3271183320E00794F7D</string>
 				<string>1C78EAAC065D492600B07095</string>
 			</array>
 			<key>ToolbarConfiguration</key>

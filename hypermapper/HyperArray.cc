@@ -14,6 +14,143 @@ HyperArray::HyperArray(const HyperArray &orig) {
 	solutions = Solutions(orig.solutions);
 }	
 
+static const uint32_t magic_number = 171827664;
+static const int header_size = 32;
+static const int array_header_size = 3;
+
+static const int array_normal = 0;
+static const int array_solution = 1;
+
+bool HyperArray::load_file(const char *filename) {
+	FILE *handle = fopen(filename,"rb");
+	if (!handle) return false;
+
+	int nsolution = 0;
+	{ // loading header
+		uint32_t header[header_size];
+		for (int k=0; k<header_size; k++) { header[k] = 0; }
+		fread(header, sizeof(uint32_t), header_size, handle);
+		if (ferror(handle) || header[0] != magic_number || header[1] != HEIGHT || header[2] != WIDTH) {
+			fclose(handle);
+			return false;
+		}
+		nsolution = header[3];
+	}
+	printf("good header %d solutions\n", nsolution);
+
+	Data local_data;
+	{ // loading left array
+		uint32_t array_header[array_header_size];
+		for (int k=0; k<array_header_size; k++) { array_header[k] = 0; }
+		fread(array_header, sizeof(uint32_t), array_header_size, handle);
+		if (ferror(handle) || array_header[0] != array_normal) {
+			fclose(handle);
+			return false;
+		}
+		int ncell = array_header[1];
+		while (ncell) {
+			uint32_t cell[3];
+			for (int k=0; k<3; k++) { cell[k] = 0; }
+			fread(cell, sizeof(uint32_t), 3, handle);
+			if (ferror(handle) || cell[0] >= HEIGHT || cell[1] >= WIDTH || cell[2] >= HEIGHT+1 || cell[2] == 0) {
+				fclose(handle);
+				return false;
+			}
+			Coord coord = std::make_pair<int,int>(cell[0], cell[1]);
+			local_data[coord] = cell[2];
+			ncell--;
+		}
+	}
+	printf("found data %d cells\n", local_data.size());
+	
+	Solutions local_solutions;
+	while (nsolution) {
+		Data local_solution;
+		{ // loading left array
+			uint32_t array_header[array_header_size];
+			for (int k=0; k<array_header_size; k++) { array_header[k] = 0; }
+			fread(array_header, sizeof(uint32_t), array_header_size, handle);
+			if (ferror(handle) || array_header[0] != array_solution) {
+				fclose(handle);
+				return false;
+			}
+			int ncell = array_header[1];
+			while (ncell) {
+				uint32_t cell[3];
+				for (int k=0; k<3; k++) { cell[k] = 0; }
+				fread(cell, sizeof(uint32_t), 3, handle);
+				if (ferror(handle) || cell[0] >= HEIGHT || cell[1] >= WIDTH || cell[2] >= HEIGHT+1 || cell[2] == 0) {
+					fclose(handle);
+					return false;
+				}
+				printf("found cell %d in solution %d\n", ncell, nsolution);
+				Coord coord = std::make_pair<int,int>(cell[0], cell[1]);
+				local_solution[coord] = cell[2];
+				ncell--;
+			}
+		}
+		printf("found solution %d %d cells\n", nsolution, local_solution.size());
+		local_solutions.push_back(local_solution);
+		nsolution--;
+	}
+	
+	data = local_data;
+	solutions = local_solutions;
+	
+	return true;
+}
+	
+bool HyperArray::save_file(const char *filename) {
+	FILE *handle = fopen(filename,"wb");
+	if (!handle) return false;
+	
+	{ // saving header
+		uint32_t header[header_size];
+		for (int k=0; k<header_size; k++) { header[k] = 0; }
+		header[0] = magic_number;
+		header[1] = HEIGHT;
+		header[2] = WIDTH;
+		header[3] = solutions.size();
+		fwrite(header, sizeof(uint32_t), header_size, handle);
+	}
+	
+	{ // saving left array
+		uint32_t array_header[array_header_size];
+		for (int k=0; k<array_header_size; k++) { array_header[k] = 0; }
+		array_header[0] = array_normal;
+		array_header[1] = data.size();
+		fwrite(array_header, sizeof(uint32_t), array_header_size, handle);
+		for (Data::const_iterator i=data.begin(); i!= data.end(); i++) {
+			uint32_t cell[3];
+			cell[0] = i->first.first;
+			cell[1] = i->first.second;
+			cell[2] = i->second;
+			fwrite(cell, sizeof(uint32_t), 3, handle);
+		}
+	}
+	
+	// saving solutions
+	for (Solutions::const_iterator i=solutions.begin(); i!=solutions.end(); i++) {
+		const Data &solution = *i;
+		uint32_t array_header[array_header_size];
+		for (int k=0; k<array_header_size; k++) { array_header[k] = 0; }
+		array_header[0] = array_solution;
+		array_header[1] = solution.size();
+		fwrite(array_header, sizeof(uint32_t), array_header_size, handle);
+		for (Data::const_iterator i=solution.begin(); i!= solution.end(); i++) {
+			uint32_t cell[3];
+			cell[0] = i->first.first;
+			cell[1] = i->first.second;
+			cell[2] = i->second;
+			fwrite(cell, sizeof(uint32_t), 3, handle);
+		}
+	}
+		
+	fclose(handle);
+	
+	return true;
+}
+
 int HyperArray::get_value(int row, const char *column, int solution) const {
 	std::string stdcolumn(column);
 	if (stdcolumn == "from")  return row+1;

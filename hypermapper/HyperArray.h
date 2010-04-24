@@ -11,6 +11,9 @@ public:
 	static const int WIDTH  = 4;
 	HyperArray();
 	HyperArray(const HyperArray &orig);
+	
+	bool load_file(const char *filename);
+	bool save_file(const char *filename);
 
 	int get_value_input(int row, int column) const;
 	int get_value_output(int row, int column, int solution) const;

@@ -58,12 +58,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				B13998411174CB0700A5A300 /* andrew.cc */,
-				B13998421174CB0700A5A300 /* andrew.h */,
-				B18B9AC41174C71500CF5123 /* array.cc */,
-				B18B9AC51174C71500CF5123 /* array.h */,
-				B18B9AC61174C71500CF5123 /* dancing.cc */,
-				B18B9AC71174C71500CF5123 /* dancing.h */,
+				B1DEA2DC1183245E00794F7D /* resolution */,
 				B12BE4F311746214000FECCE /* Controller.h */,
 				B12BE4F411746214000FECCE /* Controller.mm */,
 				B12BE5BF11747D2F000FECCE /* HyperArray.h */,
@@ -137,6 +132,19 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B1DEA2DC1183245E00794F7D /* resolution */ = {
+			isa = PBXGroup;
+			children = (
+				B13998411174CB0700A5A300 /* andrew.cc */,
+				B13998421174CB0700A5A300 /* andrew.h */,
+				B18B9AC41174C71500CF5123 /* array.cc */,
+				B18B9AC51174C71500CF5123 /* array.h */,
+				B18B9AC61174C71500CF5123 /* dancing.cc */,
+				B18B9AC71174C71500CF5123 /* dancing.h */,
+			);
+			name = resolution;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -81,5 +81,33 @@
 	}
 }
 
+- (IBAction)save:(id)sender {
+	NSSavePanel *panel = [NSSavePanel savePanel];
+	SEL sel = @selector(saveEnded:returnCode:contextInfo:);
+	[panel beginSheetForDirectory:@"~" file:@"data.hypermapper" modalForWindow:[solution_table window] modalDelegate:self didEndSelector:sel contextInfo:NULL];
+}
+
+- (void)saveEnded:(NSSavePanel *)panel returnCode:(int)code contextInfo:(void *)context {
+	if (code != NSOKButton) return;
+	const char *filename = [[panel filename] UTF8String];
+	bool success = array->save_file(filename);
+	if (success) [status_label setStringValue:[NSString stringWithFormat:@"saved %s",filename]];
+}
+
+- (IBAction)load:(id)sender {
+	NSOpenPanel *panel = [NSOpenPanel openPanel];
+	SEL sel = @selector(openEnded:returnCode:contextInfo:);
+	[panel beginSheetForDirectory:@"~" file:nil types:nil modalForWindow:[solution_table window] modalDelegate:self didEndSelector:sel contextInfo:NULL];
+}
+
+- (void)openEnded:(NSOpenPanel *)panel returnCode:(int)code contextInfo:(void *)context {
+	if (code != NSOKButton) return;
+	const char *filename = [[panel filename] UTF8String];
+	bool success = array->load_file(filename);
+	if (success) [status_label setStringValue:[NSString stringWithFormat:@"loaded %s",filename]];
+	else [status_label setStringValue:[NSString stringWithFormat:@"error while loading %s",filename]];
+	[solution_table reloadData];
+	[constraint_table reloadData];
+}
 
 @end
