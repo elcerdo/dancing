@@ -1,6 +1,7 @@
 #include "andrew.h"
 
 #include <iostream>
+#include <cstdio>
 
 using std::cout;
 using std::endl;
