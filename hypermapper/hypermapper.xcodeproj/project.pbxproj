@@ -17,6 +17,9 @@
 		B14B0FAE11774B6A0036130E /* culcube.icns in Resources */ = {isa = PBXBuildFile; fileRef = B14B0FAD11774B6A0036130E /* culcube.icns */; };
 		B18B9AC81174C71500CF5123 /* array.cc in Sources */ = {isa = PBXBuildFile; fileRef = B18B9AC41174C71500CF5123 /* array.cc */; };
 		B18B9AC91174C71500CF5123 /* dancing.cc in Sources */ = {isa = PBXBuildFile; fileRef = B18B9AC61174C71500CF5123 /* dancing.cc */; };
+		B18E990C118474300094C150 /* HyperView.mm in Sources */ = {isa = PBXBuildFile; fileRef = B18E990B118474300094C150 /* HyperView.mm */; };
+		B198DEF211860DC20014785B /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B198DEF111860DC20014785B /* GLUT.framework */; };
+		B198DF0711860DD30014785B /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B198DF0611860DD30014785B /* OpenGL.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +44,10 @@
 		B18B9AC51174C71500CF5123 /* array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = array.h; path = ../array.h; sourceTree = SOURCE_ROOT; };
 		B18B9AC61174C71500CF5123 /* dancing.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dancing.cc; path = ../dancing.cc; sourceTree = SOURCE_ROOT; };
 		B18B9AC71174C71500CF5123 /* dancing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dancing.h; path = ../dancing.h; sourceTree = SOURCE_ROOT; };
+		B18E990A118474300094C150 /* HyperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperView.h; sourceTree = "<group>"; };
+		B18E990B118474300094C150 /* HyperView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HyperView.mm; sourceTree = "<group>"; };
+		B198DEF111860DC20014785B /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = /System/Library/Frameworks/GLUT.framework; sourceTree = "<absolute>"; };
+		B198DF0611860DD30014785B /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +56,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				B198DEF211860DC20014785B /* GLUT.framework in Frameworks */,
+				B198DF0711860DD30014785B /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +72,8 @@
 				B12BE4F411746214000FECCE /* Controller.mm */,
 				B12BE5BF11747D2F000FECCE /* HyperArray.h */,
 				B12BE5C011747D2F000FECCE /* HyperArray.cc */,
+				B18E990A118474300094C150 /* HyperView.h */,
+				B18E990B118474300094C150 /* HyperView.mm */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -70,6 +81,8 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B198DF0611860DD30014785B /* OpenGL.framework */,
+				B198DEF111860DC20014785B /* GLUT.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
@@ -209,6 +222,7 @@
 				B18B9AC81174C71500CF5123 /* array.cc in Sources */,
 				B18B9AC91174C71500CF5123 /* dancing.cc in Sources */,
 				B13998431174CB0700A5A300 /* andrew.cc in Sources */,
+				B18E990C118474300094C150 /* HyperView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
