@@ -52,28 +52,28 @@
 #include <GL/glu.h>
 
 GLuint lists;
-GLfloat angle;
+GLfloat angle,angle_proj;
 GLuint mode;
 bool display_cubes;
 bool display_hyper;
 
 const int lines[16][4] = {
-{2,4,5,9},
+{1,3,4,8},
+{0,2,5,9},
 {1,3,6,10},
-{2,4,7,11},
-{1,3,8,12},
-{1,6,8,13},
+{0,2,7,11},
+{0,5,7,12},
+{1,4,6,13},
 {2,5,7,14},
-{3,6,8,15},
-{4,5,7,16},
-{1,10,12,13},
+{3,4,6,15},
+{0,9,11,12},
+{1,8,10,13},
 {2,9,11,14},
-{3,10,12,15},
-{4,9,11,16},
-{5,9,14,16},
+{3,8,10,15},
+{4,8,13,15},
+{5,9,12,14},
 {6,10,13,15},
-{7,11,14,16},
-{8,12,13,15}
+{7,11,12,14}
 };
 
 const float points[16][4] = {
@@ -96,19 +96,40 @@ const float points[16][4] = {
 {1,-1,1,-1}
 };
 
-float projector[3][4] = {
-{1,0,0,2},
-{0,1,0,2},
-{0,0,1,2}
+float projector[4][4] = {
+{1,0,0,0},
+{0,1,0,0},
+{0,0,1,0},
+{0,0,0,1}
 };
 
-float points_proj[16][3];
+float points_proj[16][4];
+
+void update_projector() {
+	for (int i=0; i<4; i++) for (int j=0; j<4; j++) {
+		projector[i][j] = 0.;
+	}
+
+	projector[0][0] = 1;
+	projector[1][1] = 1;
+	projector[2][2] = 1;
+	projector[3][3] = 1;
+	projector[2][2] = cosf(angle_proj);
+	projector[3][3] = cosf(angle_proj);
+	projector[3][2] = sinf(angle_proj);
+	projector[2][3] = -sinf(angle_proj);
+}
 
 void update_points_proj() {
-	for (int i=0; i<16; i++) for (int j=0; j<3; j++) {
-		points_proj[i][j] = 0;
-		for (int k=0; k<4; k++) {
-			points_proj[i][j] += projector[j][k]*points[i][k];
+	for (int i=0; i<16; i++) {
+		for (int j=0; j<4; j++) {
+			points_proj[i][j] = 0;
+			for (int k=0; k<4; k++) { points_proj[i][j] += projector[j][k]*points[i][k]; }
+		}
+		points_proj[i][3] += 3;
+		points_proj[i][3] /= 4;
+		for (int j=0; j<4; j++) {
+			points_proj[i][j] /= points_proj[i][3];
 		}
 	}
 }
@@ -120,6 +141,7 @@ void update_points_proj() {
 void init(void)
 {
 	angle = 0;
+	angle_proj = 0;
 	display_hyper = true;
 	display_cubes = true;
 	update_points_proj();
@@ -220,15 +242,23 @@ void display(void)
 	}
 
 	if (display_hyper) {
+		GLfloat foo[4];
 		glPushMatrix();
 		glTranslatef(0,0,-10);
 		glScalef(2,2,2);
-		glRotatef(angle,1,.4,0);
-		glColor3f(1,0,0);
+		glRotatef(20,1,0,0);
+		glRotatef(angle/4.,0,1,0);
+		foo[0]=1.; foo[1]=0.; foo[2]=0., foo[3] = 1.;
+		glMaterialfv(GL_FRONT, GL_AMBIENT, foo);
+		foo[0]=0.; foo[1]=1.; foo[2]=0., foo[3] = 1.;
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, foo);
+		foo[0]=0.; foo[1]=1.; foo[2]=0., foo[3] = 1.;
+		glMaterialfv(GL_FRONT, GL_SPECULAR, foo);
+		glMaterialf(GL_FRONT, GL_SHININESS, 1.);
 		glBegin(GL_LINES);
 		for (int i=0; i<16; i++) for (int j=0; j<4; j++) {
 			glVertex3fv(points_proj[i]);
-			glVertex3fv(points_proj[lines[i][j]-1]);
+			glVertex3fv(points_proj[lines[i][j]]);
 		}
 		glEnd();
 		glPopMatrix();
@@ -244,12 +274,12 @@ void reshape(int w, int h)
 	glLoadIdentity();
 	switch (mode) {
 	case 0:
-		if (w <= h) glOrtho(-8.0, 8.0, -8.0*(GLfloat)h/(GLfloat)w, 8.0*(GLfloat)h/(GLfloat)w, 5, 15);
-		else glOrtho(-8.0*(GLfloat)w/(GLfloat)h, 8.0*(GLfloat)w/(GLfloat)h, -8.0, 8.0, 5, 15);
+		if (w <= h) glOrtho(-8.0, 8.0, -8.0*(GLfloat)h/(GLfloat)w, 8.0*(GLfloat)h/(GLfloat)w, 0, 20);
+		else glOrtho(-8.0*(GLfloat)w/(GLfloat)h, 8.0*(GLfloat)w/(GLfloat)h, -8.0, 8.0, 0, 20);
 		break;
 	case 1:
-		if (w <= h) glFrustum(-10.0, 10.0, -10.0*(GLfloat)h/(GLfloat)w, 10.0*(GLfloat)h/(GLfloat)w, 4.0, 15.0);
-		else glFrustum(-10.0*(GLfloat)w/(GLfloat)h, 10.0*(GLfloat)w/(GLfloat)h, -10.0, 10.0, 4.0, 15.0);
+		if (w <= h) glFrustum(-1.0, 1.0, -1.0*(GLfloat)h/(GLfloat)w, 1.0*(GLfloat)h/(GLfloat)w, 1.0, 20.0);
+		else glFrustum(-1.0*(GLfloat)w/(GLfloat)h, 1.0*(GLfloat)w/(GLfloat)h, -1.0, 1.0, 1.0, 20.0);
 		break;
 	default:
 		printf("unknown mode\n");
@@ -275,6 +305,16 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 		case 104: //h
 			display_hyper = !display_hyper;
+			break;
+		case 97: //a
+			angle_proj += M_PI/30;
+			update_projector();
+			update_points_proj();
+			break;
+		case 122: //z
+			angle_proj -= M_PI/30;
+			update_projector();
+			update_points_proj();
 			break;
 	}
 }
