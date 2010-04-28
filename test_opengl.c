@@ -51,8 +51,9 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-GLuint lists;
-GLuint pipe;
+GLuint list_base;
+GLuint object,pipe,node;
+
 GLfloat angle,angle_proj;
 GLuint mode;
 bool display_cubes;
@@ -152,7 +153,7 @@ void init(void)
 
 	GLfloat ambient[] = {0.2, 0.2, 0.2, 1.0};
 	GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
-	GLfloat position[] = {5.0, 5.0, 8.0, 0.0};
+	GLfloat position[] = {0.0, 10.0, 20.0, 0.0};
 
 	GLfloat lmodel_ambient[] = {0.2, 0.2, 0.2, 1.0};
 
@@ -165,16 +166,18 @@ void init(void)
 	glFrontFace(GL_CW);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	glEnable(GL_AUTO_NORMAL);
+	//glEnable(GL_AUTO_NORMAL);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST); 
 
 	glClearColor(1,1,1,1);
 
-	lists = glGenLists(1);
-	pipe = lists+1;
+	list_base = glGenLists(3);
+	object = list_base;
+	pipe   = list_base+1;
+	node   = list_base+2;
 
-	glNewList(lists, GL_COMPILE);
+	glNewList(object, GL_COMPILE);
 	glPushMatrix();
 	glScalef(1.,2.,1.);
 	glTranslatef(0,.5,0);
@@ -193,18 +196,21 @@ void init(void)
 		float ca = cosf(angle);
 		float sa = sinf(angle);
 		glNormal3f(0,sa,ca);
-		glVertex3f(-1,ca,sa);
+		glVertex3f(1,ca,sa);
 		glNormal3f(0,sa,ca);
-		glVertex3f(1.,ca,sa);
+		glVertex3f(-1.,ca,sa);
 	}
 	glNormal3f(0,0,1);
-	glVertex3f(-1,1,0);
-	glNormal3f(0,0,1);
 	glVertex3f(1,1,0);
+	glNormal3f(0,0,1);
+	glVertex3f(-1,1,0);
 	glEnd();
 	glPopMatrix();
 	glEndList();
 
+	glNewList(node,GL_COMPILE);
+	glutSolidSphere(.4,8,8);
+	glEndList();
 }
 
 /*
@@ -228,31 +234,42 @@ void renderTeapot(GLfloat x, GLfloat y,
 	mat[0] = specr; mat[1] = specg; mat[2] = specb;
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat);
 	glMaterialf(GL_FRONT, GL_SHININESS, shine * 128.0);
-	glCallList(lists);
+	glCallList(object);
 	glCallList(pipe);
 	glPopMatrix();
 }
 
 void render_pipe(const GLfloat *a, const GLfloat *b) {
 	GLfloat matrix[16];
-	for (int i=0; i<16; i++) { matrix[i] = 0; }
 	matrix[0]  = a[0]-b[0];
 	matrix[1]  = a[1]-b[1];
 	matrix[2]  = a[2]-b[2];
 	matrix[3]  = 0;
+	GLfloat normx = sqrtf( matrix[0]*matrix[0]+matrix[1]*matrix[1]+matrix[2]*matrix[2] );
 
-	GLfloat norm = sqrtf( matrix[0]*matrix[0]+matrix[1]*matrix[1]+matrix[2]*matrix[2] );
-	matrix[4]  = -matrix[1]/norm;
-	matrix[5]  = matrix[0]/norm;
-	matrix[6]  = matrix[2]/norm;
-	matrix[7]  = 0;
-	
-	matrix[8]  = (matrix[1]*matrix[6]-matrix[2]*matrix[5])/norm;
-	matrix[9]  = (matrix[2]*matrix[4]-matrix[0]*matrix[6])/norm;
-	matrix[10] = (matrix[0]*matrix[5]-matrix[1]*matrix[4])/norm;
+	if (matrix[0] != 0. || matrix[1] != 0.) {
+		GLfloat normy = sqrtf( matrix[0]*matrix[0]+matrix[1]*matrix[1] );
+		matrix[4]  = matrix[1]/normy;
+		matrix[5]  = -matrix[0]/normy;
+		matrix[6]  = 0;
+		matrix[7]  = 0;
+	} else {
+		matrix[4]  = -1;
+		matrix[5]  = 0;
+		matrix[6]  = 0;
+		matrix[7]  = 0;
+	}
+
+	matrix[8]  = (matrix[1]*matrix[6]-matrix[2]*matrix[5])/normx;
+	matrix[9]  = (matrix[2]*matrix[4]-matrix[0]*matrix[6])/normx;
+	matrix[10] = (matrix[0]*matrix[5]-matrix[1]*matrix[4])/normx;
 	matrix[11] = 0;
 
+	matrix[12] = 0;
+	matrix[13] = 0;
+	matrix[14] = 0;
 	matrix[15] = 1;
+
 	glPushMatrix();
 	glTranslatef(a[0],a[1],a[2]);
 	glMultMatrixf(matrix);
@@ -280,7 +297,7 @@ void display(void)
 		renderTeapot(2.0, 8.0, 0.25, 0.20725, 0.20725, 1, 0.829, 0.829, 0.296648, 0.296648, 0.296648, 0.088);
 		renderTeapot(2.0, 5.0, 0.1745, 0.01175, 0.01175, 0.61424, 0.04136, 0.04136, 0.727811, 0.626959, 0.626959, 0.6);
 		renderTeapot(2.0, 2.0, 0.1, 0.18725, 0.1745, 0.396, 0.74151, 0.69102, 0.297254, 0.30829, 0.306678, 0.1);
-		renderTeapot(6.0, 17.0, 0.329412, 0.223529, 0.027451, 0.780392, 0.568627, 0.113725, 0.992157, 0.941176, 0.807843, 0.21794872);
+		renderTeapot(6.0, 17.0, 0.329412, 0.223529, 0.027451, 0.780392, 0.568627, 0.113725, 0.992157, 0.941176, 0.807843, 0.21794872); //brass
 		renderTeapot(6.0, 14.0, 0.2125, 0.1275, 0.054, 0.714, 0.4284, 0.18144, 0.393548, 0.271906, 0.166721, 0.2);
 		renderTeapot(6.0, 11.0, 0.25, 0.25, 0.25, 0.4, 0.4, 0.4, 0.774597, 0.774597, 0.774597, 0.6);
 		renderTeapot(6.0, 8.0, 0.19125, 0.0735, 0.0225, 0.7038, 0.27048, 0.0828, 0.256777, 0.137622, 0.086014, 0.1);
@@ -304,30 +321,42 @@ void display(void)
 	if (display_hyper) {
 		GLfloat foo[4];
 		glPushMatrix();
+
 		glTranslatef(0,0,-10);
 		glScalef(2,2,2);
 		glRotatef(20,1,0,0);
 		glRotatef(angle/4.,0,1,0);
-		foo[0]=1.; foo[1]=0.; foo[2]=0., foo[3] = 1.;
+
+		foo[0]=0.329412; foo[1]=0.223529; foo[2]=0.027451;
 		glMaterialfv(GL_FRONT, GL_AMBIENT, foo);
-		foo[0]=0.; foo[1]=1.; foo[2]=0., foo[3] = 1.;
+		foo[0]=0.780392; foo[1]=0.568627; foo[2]=0.113725;
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, foo);
-		foo[0]=0.; foo[1]=1.; foo[2]=0., foo[3] = 1.;
+		foo[0]=0.992157; foo[1]=0.941176; foo[2]=0.807843;
 		glMaterialfv(GL_FRONT, GL_SPECULAR, foo);
-		glMaterialf(GL_FRONT, GL_SHININESS, 1.);
-		glBegin(GL_LINES);
-		for (int i=0; i<16; i++) for (int j=0; j<2; j++) {
-			const GLfloat *a = points_proj[i];
-			const GLfloat *b = points_proj[lines[i][j]];
-			glVertex3fv(a);
-			glVertex3fv(b);
-		}
-		glEnd();
+		glMaterialf(GL_FRONT, GL_SHININESS, 0.21794872 * 128);
+
+		//glBegin(GL_LINES);
+		//for (int i=0; i<16; i++) for (int j=0; j<2; j++) {
+		//	const GLfloat *a = points_proj[i];
+		//	const GLfloat *b = points_proj[lines[i][j]];
+		//	glVertex3fv(a);
+		//	glVertex3fv(b);
+		//}
+		//glEnd();
 		for (int i=0; i<16; i++) for (int j=0; j<2; j++) {
 			const GLfloat *a = points_proj[i];
 			const GLfloat *b = points_proj[lines[i][j]];
 			render_pipe(a,b);
 		}
+
+		for (int i=0; i<16; i++) {
+			const GLfloat *a = points_proj[i];
+			glPushMatrix();
+			glTranslatef(a[0],a[1],a[2]);
+			glCallList(node);
+			glPopMatrix();
+		}
+
 		glPopMatrix();
 	}
 
