@@ -1,45 +1,3 @@
-/*
- * Copyright (c) 1993-1997, Silicon Graphics, Inc.
- * ALL RIGHTS RESERVED 
- * Permission to use, copy, modify, and distribute this software for 
- * any purpose and without fee is hereby granted, provided that the above
- * copyright notice appear in all copies and that both the copyright notice
- * and this permission notice appear in supporting documentation, and that 
- * the name of Silicon Graphics, Inc. not be used in advertising
- * or publicity pertaining to distribution of the software without specific,
- * written prior permission. 
- *
- * THE MATERIAL EMBODIED ON THIS SOFTWARE IS PROVIDED TO YOU "AS-IS"
- * AND WITHOUT WARRANTY OF ANY KIND, EXPRESS, IMPLIED OR OTHERWISE,
- * INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF MERCHANTABILITY OR
- * FITNESS FOR A PARTICULAR PURPOSE.  IN NO EVENT SHALL SILICON
- * GRAPHICS, INC.  BE LIABLE TO YOU OR ANYONE ELSE FOR ANY DIRECT,
- * SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY
- * KIND, OR ANY DAMAGES WHATSOEVER, INCLUDING WITHOUT LIMITATION,
- * LOSS OF PROFIT, LOSS OF USE, SAVINGS OR REVENUE, OR THE CLAIMS OF
- * THIRD PARTIES, WHETHER OR NOT SILICON GRAPHICS, INC.  HAS BEEN
- * ADVISED OF THE POSSIBILITY OF SUCH LOSS, HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE
- * POSSESSION, USE OR PERFORMANCE OF THIS SOFTWARE.
- * 
- * US Government Users Restricted Rights 
- * Use, duplication, or disclosure by the Government is subject to
- * restrictions set forth in FAR 52.227.19(c)(2) or subparagraph
- * (c)(1)(ii) of the Rights in Technical Data and Computer Software
- * clause at DFARS 252.227-7013 and/or in similar or successor
- * clauses in the FAR or the DOD or NASA FAR Supplement.
- * Unpublished-- rights reserved under the copyright laws of the
- * United States.  Contractor/manufacturer is Silicon Graphics,
- * Inc., 2011 N.  Shoreline Blvd., Mountain View, CA 94039-7311.
- *
- * OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
- */
-
-/*
- *  teapots.c
- *  This program demonstrates lots of material properties.
- *  A single light source illuminates the objects.
- */
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
@@ -47,14 +5,18 @@
 #include <time.h>
 
 #include <GL/glut.h>
-#include <GL/glext.h>
+//#include <GL/glext.h>
 #include <GL/gl.h>
-#include <GL/glu.h>
+//#include <GL/glu.h>
 
 GLuint list_base;
 GLuint object,pipe1,pipe2,node;
 
-GLfloat angle,angle_proj;
+bool left_down;
+int left_x,left_y;
+GLfloat old_angle_x,old_angle_y;
+
+GLfloat angle_o,angle_y,angle_x,angle_proj;
 GLuint mode_proj,mode_type;
 bool display_cubes;
 bool display_hyper;
@@ -139,15 +101,14 @@ void update_points_proj() {
 	}
 }
 
-/*
- * Initialize depth buffer, projection matrix, light source, and lighting
- * model.  Do not specify a material property here.
- */
 void init(void)
 {
 	srand(time(NULL));
 
-	angle = 0;
+	left_down = false;
+	angle_o = 0;
+	angle_x = 0;
+	angle_y = 30;
 	angle_proj = 0;
 	display_hyper = true;
 	display_cubes = false;
@@ -202,7 +163,7 @@ void init(void)
 	
 	glNewList(pipe1,GL_COMPILE);
 	glPushMatrix();
-	glScalef(.5,.2,.2);
+	glScalef(.5,.1,.1);
 	glTranslatef(1,0,0);
 	glBegin(GL_TRIANGLE_STRIP);
 	for (int i=0; i<16; i++) {
@@ -225,20 +186,9 @@ void init(void)
 	glEndList();
 }
 
-/*
- * Move object into position.  Use 3rd through 12th 
- * parameters to specify the material property.  Draw a teapot.
- */
-void renderTeapot(GLfloat x, GLfloat y,
-		GLfloat ambr, GLfloat ambg, GLfloat ambb,
-		GLfloat difr, GLfloat difg, GLfloat difb,
-		GLfloat specr, GLfloat specg, GLfloat specb, GLfloat shine)
+void set_material( GLfloat ambr, GLfloat ambg, GLfloat ambb, GLfloat difr, GLfloat difg, GLfloat difb, GLfloat specr, GLfloat specg, GLfloat specb, GLfloat shine)
 {
 	GLfloat mat[4];
-
-	glPushMatrix();
-	glTranslatef(x, y, 0);
-	glRotatef(angle,1,.8,.3333);
 	mat[0] = ambr; mat[1] = ambg; mat[2] = ambb; mat[3] = 1.0;
 	glMaterialfv(GL_FRONT, GL_AMBIENT, mat);
 	mat[0] = difr; mat[1] = difg; mat[2] = difb;
@@ -247,12 +197,19 @@ void renderTeapot(GLfloat x, GLfloat y,
 	mat[0] = specr; mat[1] = specg; mat[2] = specb;
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat);
 	glMaterialf(GL_FRONT, GL_SHININESS, shine * 128.0);
+}
+
+void render_teapot(GLfloat x, GLfloat y)
+{
+	glPushMatrix();
+	glTranslatef(x, y, 0);
+	glRotatef(angle_o,1,.8,.3333);
 	glCallList(object);
 	glPopMatrix();
 }
 
-GLfloat random_coord() {
-	return .4 * (static_cast<float>(rand())/RAND_MAX - .5);
+GLfloat random_coord(GLfloat radius=.2) {
+	return radius * (static_cast<GLfloat>(rand())/RAND_MAX - .5);
 }
 	
 
@@ -312,6 +269,15 @@ void render_pipe(const GLfloat *a, const GLfloat *b) {
 		}
 		glEnd();
 		break;
+	case 4:
+		glBegin(GL_LINE_STRIP);
+		for (int k=0; k<20; k++) {
+			glNormal3f(0,random_coord(.3),random_coord(.3));
+			glVertex3f(0,random_coord(.3),random_coord(.3));
+			glVertex3f(1,random_coord(.3),random_coord(.3));
+		}
+		glEnd();
+		break;
 	}
 	glPopMatrix();
 }
@@ -329,65 +295,50 @@ void display(void)
 	if (display_cubes) {
 		glPushMatrix();
 		glTranslatef(-8,-9.5,-8);
-		renderTeapot(2.0, 17.0, 0.0215, 0.1745, 0.0215, 0.07568, 0.61424, 0.07568, 0.633, 0.727811, 0.633, 0.6);
-		renderTeapot(2.0, 14.0, 0.135, 0.2225, 0.1575, 0.54, 0.89, 0.63, 0.316228, 0.316228, 0.316228, 0.1);
-		renderTeapot(2.0, 11.0, 0.05375, 0.05, 0.06625, 0.18275, 0.17, 0.22525, 0.332741, 0.328634, 0.346435, 0.3);
-		renderTeapot(2.0, 8.0, 0.25, 0.20725, 0.20725, 1, 0.829, 0.829, 0.296648, 0.296648, 0.296648, 0.088);
-		renderTeapot(2.0, 5.0, 0.1745, 0.01175, 0.01175, 0.61424, 0.04136, 0.04136, 0.727811, 0.626959, 0.626959, 0.6); //ruby
-		renderTeapot(2.0, 2.0, 0.1, 0.18725, 0.1745, 0.396, 0.74151, 0.69102, 0.297254, 0.30829, 0.306678, 0.1);
-		renderTeapot(6.0, 17.0, 0.329412, 0.223529, 0.027451, 0.780392, 0.568627, 0.113725, 0.992157, 0.941176, 0.807843, 0.21794872); //brass
-		renderTeapot(6.0, 14.0, 0.2125, 0.1275, 0.054, 0.714, 0.4284, 0.18144, 0.393548, 0.271906, 0.166721, 0.2);
-		renderTeapot(6.0, 11.0, 0.25, 0.25, 0.25, 0.4, 0.4, 0.4, 0.774597, 0.774597, 0.774597, 0.6);
-		renderTeapot(6.0, 8.0, 0.19125, 0.0735, 0.0225, 0.7038, 0.27048, 0.0828, 0.256777, 0.137622, 0.086014, 0.1);
-		renderTeapot(6.0, 5.0, 0.24725, 0.1995, 0.0745, 0.75164, 0.60648, 0.22648, 0.628281, 0.555802, 0.366065, 0.4);
-		renderTeapot(6.0, 2.0, 0.19225, 0.19225, 0.19225, 0.50754, 0.50754, 0.50754, 0.508273, 0.508273, 0.508273, 0.4);
-		renderTeapot(10.0, 17.0, 0.0, 0.0, 0.0, 0.01, 0.01, 0.01, 0.50, 0.50, 0.50, .25);
-		renderTeapot(10.0, 14.0, 0.0, 0.1, 0.06, 0.0, 0.50980392, 0.50980392, 0.50196078, 0.50196078, 0.50196078, .25);
-		renderTeapot(10.0, 11.0, 0.0, 0.0, 0.0, 0.1, 0.35, 0.1, 0.45, 0.55, 0.45, .25);
-		renderTeapot(10.0, 8.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.7, 0.6, 0.6, .25);
-		renderTeapot(10.0, 5.0, 0.0, 0.0, 0.0, 0.55, 0.55, 0.55, 0.70, 0.70, 0.70, .25);
-		renderTeapot(10.0, 2.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.60, 0.60, 0.50, .25);
-		renderTeapot(14.0, 17.0, 0.02, 0.02, 0.02, 0.01, 0.01, 0.01, 0.4, 0.4, 0.4, .078125);
-		renderTeapot(14.0, 14.0, 0.0, 0.05, 0.05, 0.4, 0.5, 0.5, 0.04, 0.7, 0.7, .078125);
-		renderTeapot(14.0, 11.0, 0.0, 0.05, 0.0, 0.4, 0.5, 0.4, 0.04, 0.7, 0.04, .078125);
-		renderTeapot(14.0, 8.0, 0.05, 0.0, 0.0, 0.5, 0.4, 0.4, 0.7, 0.04, 0.04, .078125);
-		renderTeapot(14.0, 5.0, 0.05, 0.05, 0.05, 0.5, 0.5, 0.5, 0.7, 0.7, 0.7, .078125);
-		renderTeapot(14.0, 2.0, 0.05, 0.05, 0.0, 0.5, 0.5, 0.4, 0.7, 0.7, 0.04, .078125);
+		set_material(0.0215, 0.1745, 0.0215, 0.07568, 0.61424, 0.07568, 0.633, 0.727811, 0.633, 0.6); render_teapot(2.0, 17.0);
+		set_material(0.135, 0.2225, 0.1575, 0.54, 0.89, 0.63, 0.316228, 0.316228, 0.316228, 0.1); render_teapot(2.0, 14.0);
+		set_material(0.05375, 0.05, 0.06625, 0.18275, 0.17, 0.22525, 0.332741, 0.328634, 0.346435, 0.3); render_teapot(2.0, 11.0);
+		set_material(0.25, 0.20725, 0.20725, 1, 0.829, 0.829, 0.296648, 0.296648, 0.296648, 0.088); render_teapot(2.0, 8.0);
+		set_material(0.1745, 0.01175, 0.01175, 0.61424, 0.04136, 0.04136, 0.727811, 0.626959, 0.626959, 0.6); render_teapot(2.0, 5.0); //ruby 
+		set_material(0.1, 0.18725, 0.1745, 0.396, 0.74151, 0.69102, 0.297254, 0.30829, 0.306678, 0.1); render_teapot(2.0, 2.0);
+		set_material(0.329412, 0.223529, 0.027451, 0.780392, 0.568627, 0.113725, 0.992157, 0.941176, 0.807843, 0.21794872); render_teapot(6.0, 17.0); //brass
+		set_material(0.2125, 0.1275, 0.054, 0.714, 0.4284, 0.18144, 0.393548, 0.271906, 0.166721, 0.2); render_teapot(6.0, 14.0);
+		set_material(0.25, 0.25, 0.25, 0.4, 0.4, 0.4, 0.774597, 0.774597, 0.774597, 0.6); render_teapot(6.0, 11.0);
+		set_material(0.19125, 0.0735, 0.0225, 0.7038, 0.27048, 0.0828, 0.256777, 0.137622, 0.086014, 0.1); render_teapot(6.0, 8.0);
+		set_material(0.24725, 0.1995, 0.0745, 0.75164, 0.60648, 0.22648, 0.628281, 0.555802, 0.366065, 0.4); render_teapot(6.0, 5.0);
+		set_material(0.19225, 0.19225, 0.19225, 0.50754, 0.50754, 0.50754, 0.508273, 0.508273, 0.508273, 0.4); render_teapot(6.0, 2.0);
+		set_material(0.0, 0.0, 0.0, 0.01, 0.01, 0.01, 0.50, 0.50, 0.50, .25); render_teapot(10.0, 17.0);
+		set_material(0.0, 0.1, 0.06, 0.0, 0.50980392, 0.50980392, 0.50196078, 0.50196078, 0.50196078, .25); render_teapot(10.0, 14.0);
+		set_material(0.0, 0.0, 0.0, 0.1, 0.35, 0.1, 0.45, 0.55, 0.45, .25); render_teapot(10.0, 11.0);
+		set_material(0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.7, 0.6, 0.6, .25); render_teapot(10.0, 8.0);
+		set_material(0.0, 0.0, 0.0, 0.55, 0.55, 0.55, 0.70, 0.70, 0.70, .25); render_teapot(10.0, 5.0);
+		set_material(0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.60, 0.60, 0.50, .25); render_teapot(10.0, 2.0);
+		set_material(0.02, 0.02, 0.02, 0.01, 0.01, 0.01, 0.4, 0.4, 0.4, .078125); render_teapot(14.0, 17.0);
+		set_material(0.0, 0.05, 0.05, 0.4, 0.5, 0.5, 0.04, 0.7, 0.7, .078125); render_teapot(14.0, 14.0);
+		set_material(0.0, 0.05, 0.0, 0.4, 0.5, 0.4, 0.04, 0.7, 0.04, .078125); render_teapot(14.0, 11.0);
+		set_material(0.05, 0.0, 0.0, 0.5, 0.4, 0.4, 0.7, 0.04, 0.04, .078125); render_teapot(14.0, 8.0);
+		set_material(0.05, 0.05, 0.05, 0.5, 0.5, 0.5, 0.7, 0.7, 0.7, .078125); render_teapot(14.0, 5.0);
+		set_material(0.05, 0.05, 0.0, 0.5, 0.5, 0.4, 0.7, 0.7, 0.04, .078125); render_teapot(14.0, 2.0);
 		glPopMatrix();
 	}
 
 	if (display_hyper) {
-		GLfloat foo[4];
 		glPushMatrix();
 
 		glTranslatef(0,0,-10);
 		glScalef(2,2,2);
-		glRotatef(33,1,0,0);
-		glRotatef(angle/4.,0,1,0);
+		glRotatef(angle_y,1,0,0);
+		glRotatef(angle_x,0,1,0);
 
-		foo[0]=0.329412; foo[1]=0.223529; foo[2]=0.027451;
-		glMaterialfv(GL_FRONT, GL_AMBIENT, foo);
-		foo[0]=0.780392; foo[1]=0.568627; foo[2]=0.113725;
-		glColor4fv(foo);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, foo);
-		foo[0]=0.992157; foo[1]=0.941176; foo[2]=0.807843;
-		glMaterialfv(GL_FRONT, GL_SPECULAR, foo);
-		glMaterialf(GL_FRONT, GL_SHININESS, 0.21794872 * 128);
+		set_material(0.329412, 0.223529, 0.027451, 0.780392, 0.568627, 0.113725, 0.992157, 0.941176, 0.807843, 0.21794872);
+		//set_material(0.02, 0.02, 0.02, 0.01, 0.01, 0.01, 0.4, 0.4, 0.4, .078125);
 		for (int i=0; i<16; i++) for (int j=0; j<2; j++) {
 			const GLfloat *a = points_proj[i];
 			const GLfloat *b = points_proj[lines[i][j]];
 			render_pipe(a,b);
 		}
 
-		foo[0]=0.1745; foo[1]=0.01175; foo[2]=0.01175;
-		glMaterialfv(GL_FRONT, GL_AMBIENT, foo);
-		foo[0]=0.61424; foo[1]=0.04136; foo[2]=0.04136;
-		glColor4fv(foo);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, foo);
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, foo);
-		foo[0]=0.727811; foo[1]=0.626959; foo[2]=0.626959;
-		glMaterialfv(GL_FRONT, GL_SPECULAR, foo);
-		glMaterialf(GL_FRONT, GL_SHININESS, 0.6 * 128);
+		set_material(0.1745, 0.01175, 0.01175, 0.61424, 0.04136, 0.04136, 0.727811, 0.626959, 0.626959, 0.6);
 		for (int i=0; i<16; i++) {
 			const GLfloat *a = points_proj[i];
 			glPushMatrix();
@@ -458,7 +409,7 @@ void keyboard(unsigned char key, int x, int y)
 			break;
 		case 101: //e
 			mode_type++;
-			mode_type %= 4;
+			mode_type %= 5;
 			break;
 		default:
 			printf("key=%d\n",key);
@@ -466,15 +417,35 @@ void keyboard(unsigned char key, int x, int y)
 	}
 }
 
-void timer(int value) {
-	angle += 1;
+void timer(int value)
+{
+	angle_o += 1;
 	glutPostRedisplay();	
 	glutTimerFunc(10,timer,value+1);
 }
 
-/*
- * Main Loop 
- */
+void mouse_down(int button, int state, int x, int y) {
+	if (button != 0) return;
+
+	if (state == GLUT_DOWN) {
+		left_down = true;
+		left_x = x;
+		left_y = y;
+		old_angle_x = angle_x;
+		old_angle_y = angle_y;
+	} else {
+		left_down = false;
+		angle_x = old_angle_x + (x-left_x)/3.;
+		angle_y = old_angle_y + (y-left_y)/3.;
+	}
+}
+
+void mouse_move(int x, int y) {
+	if (!left_down) return;
+	angle_x = old_angle_x + (x-left_x)/3.;
+	angle_y = old_angle_y + (y-left_y)/3.;
+}
+
 int main(int argc, char **argv)
 {
 	glutInit(&argc, argv);
@@ -486,6 +457,8 @@ int main(int argc, char **argv)
 	glutReshapeFunc(reshape);
 	glutDisplayFunc(display);
 	glutKeyboardFunc(keyboard);
+	glutMotionFunc(mouse_move);
+	glutMouseFunc(mouse_down);
 	glutTimerFunc(0,timer,0);
 	glutMainLoop();
 	return 0;
