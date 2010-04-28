@@ -20,6 +20,9 @@ GLfloat angle_o,angle_y,angle_x,angle_proj;
 GLuint mode_proj,mode_type;
 bool display_cubes;
 bool display_hyper;
+bool display_nodes;
+
+int selected_color;
 
 const int lines[16][2] = {
 {1,4},
@@ -72,6 +75,16 @@ float projector[4][4] = {
 
 float points_proj[16][4];
 
+const float colors[7][3] = {
+{207,137,39},
+{185,251,81},
+{89,172,82},
+{97,156,170},
+{91,79,89},
+{240,38,38},
+{250,203,177}
+};
+
 void update_projector() {
 	for (int i=0; i<4; i++) for (int j=0; j<4; j++) {
 		projector[i][j] = 0.;
@@ -105,13 +118,15 @@ void init(void)
 {
 	srand(time(NULL));
 
+	selected_color = 0;
 	left_down = false;
 	angle_o = 0;
-	angle_x = 0;
+	angle_x = 22;
 	angle_y = 30;
 	angle_proj = 0;
 	display_hyper = true;
 	display_cubes = false;
+	display_nodes = true;
 	mode_proj = 0;
 	mode_type = 0;
 	update_points_proj();
@@ -129,6 +144,8 @@ void init(void)
 	glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, 0.);
 
 	glFrontFace(GL_CW);
+	//glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_BLEND);
@@ -186,10 +203,10 @@ void init(void)
 	glEndList();
 }
 
-void set_material( GLfloat ambr, GLfloat ambg, GLfloat ambb, GLfloat difr, GLfloat difg, GLfloat difb, GLfloat specr, GLfloat specg, GLfloat specb, GLfloat shine)
+void set_material( GLfloat ambr, GLfloat ambg, GLfloat ambb, GLfloat difr, GLfloat difg, GLfloat difb, GLfloat specr, GLfloat specg, GLfloat specb, GLfloat shine, GLfloat alpha = 1.)
 {
 	GLfloat mat[4];
-	mat[0] = ambr; mat[1] = ambg; mat[2] = ambb; mat[3] = 1.0;
+	mat[0] = ambr; mat[1] = ambg; mat[2] = ambb; mat[3] = alpha;
 	glMaterialfv(GL_FRONT, GL_AMBIENT, mat);
 	mat[0] = difr; mat[1] = difg; mat[2] = difb;
 	glColor4fv(mat);
@@ -211,7 +228,13 @@ void render_teapot(GLfloat x, GLfloat y)
 GLfloat random_coord(GLfloat radius=.2) {
 	return radius * (static_cast<GLfloat>(rand())/RAND_MAX - .5);
 }
-	
+
+void set_material_rgb(const float *color) {
+	float r = color[0]/255.;
+	float g = color[1]/255.;
+	float b = color[2]/255.;
+	set_material(r,g,b,r,g,b,r,g,b,0.);
+}
 
 void render_pipe(const GLfloat *a, const GLfloat *b) {
 	GLfloat matrix[16];
@@ -330,21 +353,25 @@ void display(void)
 		glRotatef(angle_y,1,0,0);
 		glRotatef(angle_x,0,1,0);
 
-		set_material(0.329412, 0.223529, 0.027451, 0.780392, 0.568627, 0.113725, 0.992157, 0.941176, 0.807843, 0.21794872);
+		//set_material(0.329412, 0.223529, 0.027451, 0.780392, 0.568627, 0.113725, 0.992157, 0.941176, 0.807843, 0.21794872);
 		//set_material(0.02, 0.02, 0.02, 0.01, 0.01, 0.01, 0.4, 0.4, 0.4, .078125);
+		//set_material_rgb(240,38,38);
+		set_material_rgb(colors[selected_color]);
 		for (int i=0; i<16; i++) for (int j=0; j<2; j++) {
 			const GLfloat *a = points_proj[i];
 			const GLfloat *b = points_proj[lines[i][j]];
 			render_pipe(a,b);
 		}
 
-		set_material(0.1745, 0.01175, 0.01175, 0.61424, 0.04136, 0.04136, 0.727811, 0.626959, 0.626959, 0.6);
-		for (int i=0; i<16; i++) {
-			const GLfloat *a = points_proj[i];
-			glPushMatrix();
-			glTranslatef(a[0],a[1],a[2]);
-			glCallList(node);
-			glPopMatrix();
+		if (display_nodes) {
+			set_material(0.1745, 0.01175, 0.01175, 0.61424, 0.04136, 0.04136, 0.727811, 0.626959, 0.626959, 0.6);
+			for (int i=0; i<16; i++) {
+				const GLfloat *a = points_proj[i];
+				glPushMatrix();
+				glTranslatef(a[0],a[1],a[2]);
+				glCallList(node);
+				glPopMatrix();
+			}
 		}
 
 		glPopMatrix();
@@ -401,6 +428,13 @@ void keyboard(unsigned char key, int x, int y)
 			angle_proj += M_PI/20;
 			update_projector();
 			update_points_proj();
+			break;
+		case 110: //n
+			display_nodes = !display_nodes;
+			break;
+		case 112: //p
+			selected_color++;
+			selected_color %= 7;
 			break;
 		case 122: //z
 			angle_proj -= M_PI/20;
