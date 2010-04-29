@@ -72,7 +72,7 @@ void renderTeapot(GLfloat x, GLfloat y,
 {
 	GLfloat ambient[] = {0.0, 0.0, 0.0, 1.0};
 	GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
-	GLfloat specular[] = {1.0, 1.0, 1.0, 1.0};
+	//GLfloat specular[] = {1.0, 1.0, 1.0, 1.0};
 	GLfloat position[] = {0.0, 3.0, 3.0, 0.0};
 	
 	GLfloat lmodel_ambient[] = {0.2, 0.2, 0.2, 1.0};
@@ -93,11 +93,11 @@ void renderTeapot(GLfloat x, GLfloat y,
 	/*  be efficient--make teapot display list  */
 	teapotList = glGenLists(1);
 	glNewList (teapotList, GL_COMPILE);
-	glutSolidTeapot(1.0);
+	glutSolidCube(3.0);
 	glEndList ();
 }
 
-- (void)update
+- (void)drawRect:(NSRect)rect
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	renderTeapot(2.0, 17.0, 0.0215, 0.1745, 0.0215,
@@ -149,7 +149,7 @@ void renderTeapot(GLfloat x, GLfloat y,
 				 0.7, 0.7, 0.7, .078125);
 	renderTeapot(14.0, 2.0, 0.05, 0.05, 0.0, 0.5, 0.5, 0.4,
 				 0.7, 0.7, 0.04, .078125);
-	glFlush();
+	glSwapAPPLE();
 }
 
 - (void)reshape

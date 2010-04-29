@@ -4,10 +4,17 @@
 #include <stdlib.h>
 #include <time.h>
 
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#include <OpenGL/glext.h>
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
 #include <GL/glut.h>
 //#include <GL/glext.h>
 #include <GL/gl.h>
 //#include <GL/glu.h>
+#endif
 
 GLuint list_base;
 GLuint object,pipe1,pipe2,node;

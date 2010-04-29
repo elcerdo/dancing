@@ -1,0 +1,152 @@
+// !$*UTF8*$!
+{
+	08FB7793FE84155DC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = B17FD3101188C0EB00136480 /* openglcli */;
+		activeTarget = 8DD76F620486A84900D96B5E /* openglcli */;
+		addToTargets = (
+			8DD76F620486A84900D96B5E /* openglcli */,
+		);
+		codeSenseManager = B17FD3141188C0F300136480 /* Code sense */;
+		executables = (
+			B17FD3101188C0EB00136480 /* openglcli */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXErrorsWarningsDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXErrorsWarningsDataSource_LocationID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					300,
+					231,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXErrorsWarningsDataSource_TypeID,
+					PBXErrorsWarningsDataSource_MessageID,
+					PBXErrorsWarningsDataSource_LocationID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					341,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					301,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 294174955;
+			PBXWorkspaceStateSaveDate = 294174955;
+		};
+		perUserProjectItems = {
+			B17FD4B11188C1D800136480 /* PBXTextBookmark */ = B17FD4B11188C1D800136480 /* PBXTextBookmark */;
+			B17FD4D31188C2B900136480 /* PBXTextBookmark */ = B17FD4D31188C2B900136480 /* PBXTextBookmark */;
+		};
+		sourceControlManager = B17FD3131188C0F300136480 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	8DD76F620486A84900D96B5E /* openglcli */ = {
+		activeExec = 0;
+		executables = (
+			B17FD3101188C0EB00136480 /* openglcli */,
+		);
+	};
+	B17FD3101188C0EB00136480 /* openglcli */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = openglcli;
+		sourceDirectories = (
+		);
+	};
+	B17FD3131188C0F300136480 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+		};
+	};
+	B17FD3141188C0F300136480 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	B17FD31B1188C11600136480 /* test_opengl.cc */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1104, 7098}}";
+			sepNavSelRange = "{12556, 0}";
+			sepNavVisRange = "{12474, 484}";
+		};
+	};
+	B17FD4B11188C1D800136480 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = B17FD31B1188C11600136480 /* test_opengl.cc */;
+		name = "test_opengl.cc: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 484;
+		vrLoc = 12474;
+	};
+	B17FD4D31188C2B900136480 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = B17FD31B1188C11600136480 /* test_opengl.cc */;
+		name = "test_opengl.cc: 489";
+		rLen = 0;
+		rLoc = 12556;
+		rType = 0;
+		vrLen = 484;
+		vrLoc = 12474;
+	};
+}
