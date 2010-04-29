@@ -6,9 +6,9 @@
 
 #ifdef __APPLE_CC__
 #include <GLUT/glut.h>
-#include <OpenGL/glext.h>
+//#include <OpenGL/glext.h>
 #include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
+//#include <OpenGL/glu.h>
 #else
 #include <GL/glut.h>
 //#include <GL/glext.h>
@@ -138,11 +138,11 @@ void init(void)
 	mode_type = 0;
 	update_points_proj();
 
-	GLfloat ambient[] = {0.2, 0.2, 0.2, 1.0};
+	GLfloat ambient[] = {.2, .2, .2, 1.0};
 	GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
 	GLfloat position[] = {0.0, 10.0, 20.0, 0.0};
 
-	GLfloat lmodel_ambient[] = {0.2, 0.2, 0.2, 1.0};
+	GLfloat lmodel_ambient[] = {0, 0., 0., 1.0};
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
@@ -152,11 +152,11 @@ void init(void)
 
 	glFrontFace(GL_CW);
 	//glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	glEnable(GL_BLEND);
-	//glEnable(GL_AUTO_NORMAL);
+	//glEnable(GL_BLEND);
+	glEnable(GL_AUTO_NORMAL);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST); 
 
@@ -206,7 +206,8 @@ void init(void)
 	glEndList();
 
 	glNewList(node,GL_COMPILE);
-	glutSolidSphere(.3,16,16);
+	glutSolidSphere(.2,16,16);
+	//glutSolidTeapot(.3);
 	glEndList();
 }
 
@@ -240,7 +241,7 @@ void set_material_rgb(const float *color) {
 	float r = color[0]/255.;
 	float g = color[1]/255.;
 	float b = color[2]/255.;
-	set_material(r,g,b,r,g,b,r,g,b,0.);
+	set_material(r,g,b,r,g,b,0,0,0,0.5);
 }
 
 void render_pipe(const GLfloat *a, const GLfloat *b) {

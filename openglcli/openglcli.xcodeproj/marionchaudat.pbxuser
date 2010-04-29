@@ -31,7 +31,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					341,
+					833,
 					20,
 					48,
 					43,
@@ -70,11 +70,11 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 294174955;
-			PBXWorkspaceStateSaveDate = 294174955;
+			PBXPerProjectTemplateStateSaveDate = 294263260;
+			PBXWorkspaceStateSaveDate = 294263260;
 		};
 		perUserProjectItems = {
-			B17FD4B11188C1D800136480 /* PBXTextBookmark */ = B17FD4B11188C1D800136480 /* PBXTextBookmark */;
+			B134E3D9118A1EC100D05E0A /* PBXTextBookmark */ = B134E3D9118A1EC100D05E0A /* PBXTextBookmark */;
 			B17FD4D31188C2B900136480 /* PBXTextBookmark */ = B17FD4D31188C2B900136480 /* PBXTextBookmark */;
 		};
 		sourceControlManager = B17FD3131188C0F300136480 /* Source Control */;
@@ -86,6 +86,16 @@
 		executables = (
 			B17FD3101188C0EB00136480 /* openglcli */,
 		);
+	};
+	B134E3D9118A1EC100D05E0A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = B17FD31B1188C11600136480 /* test_opengl.cc */;
+		name = "test_opengl.cc: 141";
+		rLen = 0;
+		rLoc = 2183;
+		rType = 0;
+		vrLen = 875;
+		vrLoc = 1908;
 	};
 	B17FD3101188C0EB00136480 /* openglcli */ = {
 		isa = PBXExecutable;
@@ -124,27 +134,17 @@
 	};
 	B17FD31B1188C11600136480 /* test_opengl.cc */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1104, 7098}}";
-			sepNavSelRange = "{12556, 0}";
-			sepNavVisRange = "{12474, 484}";
+			sepNavIntBoundsRect = "{{0, 0}, {1104, 7112}}";
+			sepNavSelRange = "{2183, 0}";
+			sepNavVisRange = "{1908, 875}";
 		};
-	};
-	B17FD4B11188C1D800136480 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = B17FD31B1188C11600136480 /* test_opengl.cc */;
-		name = "test_opengl.cc: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 484;
-		vrLoc = 12474;
 	};
 	B17FD4D31188C2B900136480 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = B17FD31B1188C11600136480 /* test_opengl.cc */;
 		name = "test_opengl.cc: 489";
 		rLen = 0;
-		rLoc = 12556;
+		rLoc = 12576;
 		rType = 0;
 		vrLen = 484;
 		vrLoc = 12474;
