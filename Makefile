@@ -12,8 +12,8 @@ solve_sudoku: solve_sudoku.o dancing.o
 
 solve_andrew: solve_andrew.o dancing.o andrew.o
 
-test_opengl: test_opengl.o
-	$(CC) $(LDFLAGS) -o test_opengl test_opengl.o -lGL -lglut
+test_opengl: hypercube.o test_opengl.o
+	$(CC) $(LDFLAGS) -o test_opengl test_opengl.o  hypercube.o -lGL -lglut
 
 clean:
 	$(RM) solve_andrew solve_sudoku solve_array test_opengl *.o
