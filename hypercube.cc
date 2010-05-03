@@ -1,6 +1,7 @@
 #include "hypercube.h"
 
 #include <cmath>
+#include <cstdlib>
 #include <ctime>
 
 const int lines[16][2] = {
@@ -268,7 +269,9 @@ void HyperCube::render() const {
     }
 
     glPopMatrix();
-	glutSwapBuffers();
+	
+	glFlush();
+	//glutSwapBuffers();
 }
 
 void HyperCube::render_teapot(GLfloat x, GLfloat y) const {

@@ -11,6 +11,7 @@
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		B117A78B118F5FD400C219E7 /* hypercube.cc in Sources */ = {isa = PBXBuildFile; fileRef = B117A789118F5FD400C219E7 /* hypercube.cc */; };
 		B12BE4F511746214000FECCE /* Controller.mm in Sources */ = {isa = PBXBuildFile; fileRef = B12BE4F411746214000FECCE /* Controller.mm */; };
 		B12BE5C111747D2F000FECCE /* HyperArray.cc in Sources */ = {isa = PBXBuildFile; fileRef = B12BE5C011747D2F000FECCE /* HyperArray.cc */; };
 		B13998431174CB0700A5A300 /* andrew.cc in Sources */ = {isa = PBXBuildFile; fileRef = B13998411174CB0700A5A300 /* andrew.cc */; };
@@ -33,6 +34,8 @@
 		32CA4F630368D1EE00C91783 /* hypermapper_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hypermapper_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* hypermapper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hypermapper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B117A789118F5FD400C219E7 /* hypercube.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = hypercube.cc; path = ../hypercube.cc; sourceTree = SOURCE_ROOT; };
+		B117A78A118F5FD400C219E7 /* hypercube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hypercube.h; path = ../hypercube.h; sourceTree = SOURCE_ROOT; };
 		B12BE4F311746214000FECCE /* Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Controller.h; sourceTree = "<group>"; };
 		B12BE4F411746214000FECCE /* Controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Controller.mm; sourceTree = "<group>"; };
 		B12BE5BF11747D2F000FECCE /* HyperArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperArray.h; sourceTree = "<group>"; };
@@ -67,13 +70,12 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				B117A78D118F5FE800C219E7 /* display */,
 				B1DEA2DC1183245E00794F7D /* resolution */,
 				B12BE4F311746214000FECCE /* Controller.h */,
 				B12BE4F411746214000FECCE /* Controller.mm */,
 				B12BE5BF11747D2F000FECCE /* HyperArray.h */,
 				B12BE5C011747D2F000FECCE /* HyperArray.cc */,
-				B18E990A118474300094C150 /* HyperView.h */,
-				B18E990B118474300094C150 /* HyperView.mm */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -145,6 +147,17 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B117A78D118F5FE800C219E7 /* display */ = {
+			isa = PBXGroup;
+			children = (
+				B18E990A118474300094C150 /* HyperView.h */,
+				B18E990B118474300094C150 /* HyperView.mm */,
+				B117A789118F5FD400C219E7 /* hypercube.cc */,
+				B117A78A118F5FD400C219E7 /* hypercube.h */,
+			);
+			name = display;
 			sourceTree = "<group>";
 		};
 		B1DEA2DC1183245E00794F7D /* resolution */ = {
@@ -223,6 +236,7 @@
 				B18B9AC91174C71500CF5123 /* dancing.cc in Sources */,
 				B13998431174CB0700A5A300 /* andrew.cc in Sources */,
 				B18E990C118474300094C150 /* HyperView.mm in Sources */,
+				B117A78B118F5FD400C219E7 /* hypercube.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8DD76F6A0486A84900D96B5E /* openglcli.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C6859E8B029090EE04C91782 /* openglcli.1 */; };
+		B1097768118F5F02007C5744 /* hypercube.cc in Sources */ = {isa = PBXBuildFile; fileRef = B1097766118F5F02007C5744 /* hypercube.cc */; };
 		B17FD31C1188C11600136480 /* test_opengl.cc in Sources */ = {isa = PBXBuildFile; fileRef = B17FD31B1188C11600136480 /* test_opengl.cc */; };
 		B17FD33F1188C17B00136480 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B17FD3391188C17B00136480 /* CoreData.framework */; };
 		B17FD4CA1188C28200136480 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B17FD4C91188C28200136480 /* GLUT.framework */; };
@@ -29,6 +30,8 @@
 
 /* Begin PBXFileReference section */
 		8DD76F6C0486A84900D96B5E /* openglcli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = openglcli; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1097766118F5F02007C5744 /* hypercube.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = hypercube.cc; path = ../hypercube.cc; sourceTree = SOURCE_ROOT; };
+		B1097767118F5F02007C5744 /* hypercube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hypercube.h; path = ../hypercube.h; sourceTree = SOURCE_ROOT; };
 		B17FD31B1188C11600136480 /* test_opengl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test_opengl.cc; path = ../test_opengl.cc; sourceTree = SOURCE_ROOT; };
 		B17FD3391188C17B00136480 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		B17FD4C91188C28200136480 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = /System/Library/Frameworks/GLUT.framework; sourceTree = "<absolute>"; };
@@ -65,6 +68,8 @@
 			isa = PBXGroup;
 			children = (
 				B17FD31B1188C11600136480 /* test_opengl.cc */,
+				B1097766118F5F02007C5744 /* hypercube.cc */,
+				B1097767118F5F02007C5744 /* hypercube.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -139,6 +144,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B17FD31C1188C11600136480 /* test_opengl.cc in Sources */,
+				B1097768118F5F02007C5744 /* hypercube.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

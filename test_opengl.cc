@@ -82,7 +82,7 @@ void mouse_move(int y, int x) {
 }
 
 void reshape(int w, int h) { cube->reshape(w,h); }
-void render() { cube->render(); }
+void render() { cube->render(); glutSwapBuffers(); }
 
 int main(int argc, char **argv)
 {

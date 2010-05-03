@@ -1,8 +1,14 @@
 #import <Cocoa/Cocoa.h>
- 
+
+#import "hypercube.h"
+
 @interface HyperView : NSOpenGLView {
-	float transform[4][4];
-	float projection[4][4];
+	HyperCube *cube;
+	float init_angle_x,init_angle_y;
+	int init_x,init_y;
+	
 }
+
+- (IBAction)updateProjAngle:(id)sender;
 
 @end
